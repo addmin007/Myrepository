@@ -1626,12 +1626,15 @@ ${monitoringState.settings.continuousMode ? '已自动更新原始内容，继�
             // 从页面标题中提取店名
             const storeName = extractStoreNameFromTitle(document.title);
             
-            // 构造包含店名的消息格式：店名+网店客服发来信息：+真实消息
-            const formattedMessage = `${storeName}网店客服发来信息：${messageInfo.content}`;
+            // 构造对话历史格式
+            const conversationHistory = buildConversationHistory();
+            const formattedMessage = conversationHistory || `${storeName}网店客服发来信息：${messageInfo.content}`;
             
             const requestData = {
                 message: formattedMessage,
+                messageType: conversationHistory ? 'conversation' : 'single',
                 originalMessage: messageInfo.content, // 保留原始消息
+                conversationCount: conversationHistory ? conversationHistory.split('\n').length : 1,
                 storeName: storeName, // 单独提供店名
                 sender: messageInfo.sender,
                 timestamp: messageInfo.timestamp,
@@ -1838,21 +1841,26 @@ ${monitoringState.settings.continuousMode ? '已自动更新原始内容，继�
                 ...monitoringState.apiConfig.customHeaders
             };
             
-            // 构建请求体
-            const requestData = messageInfo.content;
+            // 构建请求体 - 改为发送对话历史
+            const conversationHistory = buildConversationHistory();
+            const requestData = conversationHistory || messageInfo.content; // 如果没有对话历史，回退到单条消息
             
             console.log('发送请求到API:', {
                 endpoint: apiEndpoint,
                 headers: headers,
                 body: requestData,
-                retryCount: retryCount
+                retryCount: retryCount,
+                messageType: conversationHistory ? '对话历史' : '单条消息'
             });
 
             const response = await fetch(apiEndpoint, {
                 method: 'POST',
                 headers: headers,
                 body: JSON.stringify({
-                    message: requestData
+                    message: requestData,
+                    messageType: conversationHistory ? 'conversation' : 'single',
+                    originalMessage: messageInfo.content, // 保留原始单条消息
+                    conversationCount: conversationHistory ? requestData.split('\n').length : 1
                 }),
                 signal: controller.signal
             });
@@ -3418,5 +3426,61 @@ ${monitoringState.settings.continuousMode ? '已自动更新原始内容，继�
         window.sendMessageToCustomer = sendMessageToCustomer;
         window.sendAIMessageToPddChat = sendAIMessageToPddChat;
     }
+
+    // 新增：构建对话历史
+    function buildConversationHistory() {
+        try {
+            // 获取聊天历史记录，限制为最近50条
+            const chatHistory = getChatHistory(50);
+            if (!chatHistory || chatHistory.length === 0) {
+                console.log('没有聊天历史记录');
+                return '';
+            }
+            
+            // 构建对话格式：客户：*** 客服：***
+            let conversationText = '';
+            let messageCount = 0;
+            
+            for (const message of chatHistory) {
+                if (messageCount >= 50) break; // 限制最多50条
+                
+                if (message.content && message.content.trim()) {
+                    // 根据身份添加前缀
+                    if (message.isService) {
+                        conversationText += `客服：${message.content.trim()}\n`;
+                    } else if (message.isCustomer) {
+                        conversationText += `客户：${message.content.trim()}\n`;
+                    } else {
+                        // 如果身份未知，尝试从其他属性推断
+                        if (message.role === 'service') {
+                            conversationText += `客服：${message.content.trim()}\n`;
+                        } else if (message.role === 'customer') {
+                            conversationText += `客户：${message.content.trim()}\n`;
+                        } else {
+                            // 如果仍然无法确定，根据data-pin判断
+                            if (message.dataPin === '1') {
+                                conversationText += `客服：${message.content.trim()}\n`;
+                            } else if (message.dataPin === '0') {
+                                conversationText += `客户：${message.content.trim()}\n`;
+                            } else {
+                                // 最后兜底，标记为未知身份
+                                conversationText += `未知：${message.content.trim()}\n`;
+                            }
+                        }
+                    }
+                    messageCount++;
+                }
+            }
+            
+            console.log(`构建对话历史完成，共${messageCount}条消息`);
+            return conversationText.trim();
+            
+        } catch (error) {
+            console.error('构建对话历史失败:', error);
+            return '';
+        }
+    }
+
+    // 带超时的消息发送
 
 })(); 
