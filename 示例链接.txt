@@ -1,0 +1,9 @@
+https://mobile.yangkeduo.com/goods.html?goods_id=123456789&mall_id=987654321
+https://mobile.yangkeduo.com/chat_detail.html?goods_id=123456789&mall_id=987654321
+https://mobile.yangkeduo.com/goods_detail.html?goods_id=123456789
+https://mobile.yangkeduo.com/mall.html?mall_id=987654321
+https://mobile.yangkeduo.com/goods.html?goods_id=111222333&pdduid=5463180454658
+https://mobile.yangkeduo.com/chat.html?chat_id=456789123
+https://mobile.yangkeduo.com/detail.html?goods_id=789123456
+https://mobile.yangkeduo.com/goods.html?goods_id=321654987&mall_id=147258369
+
