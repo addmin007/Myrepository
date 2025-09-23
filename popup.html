@@ -1,0 +1,3695 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>拼多多聊天监控器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #a5b4fc;
+            --secondary-color: #10b981;
+            --secondary-dark: #059669;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --info-color: #3b82f6;
+            --success-color: #10b981;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border: #e2e8f0;
+            --border-light: #f1f5f9;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --radius: 10px;
+            --radius-sm: 6px;
+            --radius-lg: 14px;
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-success: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+            --gradient-warning: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-danger: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            --gradient-info: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --accent-color: #8b5cf6;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 12px;
+            --spacing-lg: 16px;
+            --spacing-xl: 20px;
+        }
+
+        body {
+            width: 100%;
+            min-width: 450px;
+            max-width: 600px;
+            min-height: 650px;
+            font-family: 'Inter', 'Segoe UI', 'Microsoft YaHei', Arial, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+            transition: all 0.3s ease;
+            margin: 0 auto;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 600px) {
+            body {
+                width: 100%;
+                min-width: 450px;
+            }
+            
+            .container {
+                padding: 0;
+            }
+            
+            .header {
+                padding: 20px 16px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .tabs {
+                padding: 0 16px;
+            }
+            
+            .tab {
+                padding: 12px 14px;
+                font-size: 13px;
+                min-width: 70px;
+            }
+            
+            .tab-content {
+                padding: 16px;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+            
+            .status-display {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .btn {
+                width: 100%;
+                padding: 16px 24px;
+            }
+        }
+
+        /* 深色模式支持 */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --background: #0f172a;
+                --surface: #1e293b;
+                --text-primary: #f1f5f9;
+                --text-secondary: #cbd5e1;
+                --text-muted: #64748b;
+                --border: #334155;
+                --border-light: #1e293b;
+            }
+        }
+
+        /* 打印样式 */
+        @media print {
+            .header,
+            .tabs,
+            .button-group {
+                display: none;
+            }
+            
+            .section {
+                break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+            
+            .status-item {
+                break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+        }
+
+        /* 焦点管理 */
+        .btn:focus,
+        .form-input:focus,
+        .tab:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        /* 减少动画 */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* 选择器样式 */
+        select.form-input,
+        .form-select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 12px center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            padding-right: 40px;
+            appearance: none;
+        }
+
+        select.form-input:focus,
+        .form-select:focus {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236366f1' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+        }
+
+        /* 预设话术下拉框样式 */
+        .quick-message-selector {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .quick-message-selector select {
+            flex: 1;
+            min-height: 44px;
+            max-height: 200px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-color) var(--border-light);
+        }
+
+        .quick-message-selector select::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .quick-message-selector select::-webkit-scrollbar-track {
+            background: var(--border-light);
+            border-radius: 4px;
+        }
+
+        .quick-message-selector select::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        .quick-message-selector select::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        .quick-message-selector select option {
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border-light);
+            transition: background-color 0.2s ease;
+        }
+
+        .quick-message-selector select option:hover {
+            background-color: var(--primary-light);
+            color: white;
+        }
+
+        .quick-message-selector select option:checked {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* 文件输入样式 */
+        input[type="file"].form-input {
+            padding: 12px 16px;
+            background: var(--surface);
+            border: 2px dashed var(--border);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        input[type="file"].form-input:hover {
+            border-color: var(--primary-color);
+            background: var(--border-light);
+        }
+
+                input[type="file"].form-input:focus {
+            border-color: var(--primary-color);
+            background: var(--surface);
+        }
+        
+        /* 话术选择器样式 */
+        .quick-message-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 8px;
+        }
+        
+        .quick-message-selector .form-select {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        /* 话术按钮样式 */
+        .quick-message-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        
+        .quick-message-btn {
+            padding: 8px 12px;
+            font-size: 13px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text-primary);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            text-align: left;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        .quick-message-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+        
+        .quick-message-btn:active {
+            transform: translateY(0);
+        }
+        
+        /* 自定义话术按钮样式 */
+        .custom-message-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 8px;
+            position: relative;
+        }
+        
+        .custom-message-btn {
+            padding: 8px 12px;
+            font-size: 13px;
+            border: 1px solid var(--secondary-color);
+            background: var(--surface);
+            color: var(--text-primary);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            position: relative;
+            text-align: left;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        .custom-message-btn:hover {
+            background: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+        
+        .custom-message-btn:active {
+            transform: translateY(0);
+        }
+        
+        .custom-message-btn .delete-btn {
+            position: absolute;
+            top: -6px;
+            right: 8px;
+            width: 18px;
+            height: 18px;
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 12px;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            z-index: 10;
+        }
+        
+        .custom-message-btn:hover .delete-btn {
+            opacity: 1;
+        }
+        
+        .custom-message-btn .delete-btn:hover {
+            background: var(--danger-color);
+            transform: scale(1.1);
+        }
+        
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+            min-height: 32px;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+        
+        .btn-outline:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+  
+        /* 范围输入样式 */
+        input[type="range"].form-input {
+            height: 5px;
+            background: var(--border);
+            border-radius: 3px;
+            outline: none;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        input[type="range"].form-input::-webkit-slider-thumb {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        input[type="range"].form-input::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-lg);
+        }
+
+        input[type="range"].form-input::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            box-shadow: var(--shadow);
+        }
+
+        /* 进度条样式 */
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 14px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* 徽章样式 */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: var(--transition);
+        }
+
+        .badge.primary {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .badge.success {
+            background: var(--gradient-success);
+            color: white;
+        }
+
+        .badge.warning {
+            background: var(--gradient-warning);
+            color: white;
+        }
+
+        .badge.danger {
+            background: var(--gradient-danger);
+            color: white;
+        }
+
+        .badge.info {
+            background: var(--gradient-info);
+            color: white;
+        }
+
+        .badge:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow);
+        }
+
+        /* 卡片样式 */
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            border: 2px solid var(--border);
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary-color);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .card-body {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* 警告框样式 */
+        .alert {
+            padding: 16px 20px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 20px;
+            border-left: 4px solid;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .alert.alert-success {
+            background: #f0fdf4;
+            border-color: var(--success-color);
+            color: #166534;
+        }
+
+        .alert.alert-warning {
+            background: #fffbeb;
+            border-color: var(--warning-color);
+            color: #92400e;
+        }
+
+        .alert.alert-danger {
+            background: #fef2f2;
+            border-color: var(--danger-color);
+            color: #991b1b;
+        }
+
+        .alert.alert-info {
+            background: #eff6ff;
+            border-color: var(--info-color);
+            color: #1e40af;
+        }
+
+        .alert:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow);
+        }
+
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            border: 2px solid var(--border);
+            position: relative;
+            animation: slideInUp 0.3s ease;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--border-light);
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 8px;
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            background: var(--border-light);
+            color: var(--text-primary);
+        }
+
+        /* 工具提示样式 */
+        .tooltip {
+            position: relative;
+            cursor: help;
+        }
+
+        .tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text-primary);
+            color: white;
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: var(--shadow-lg);
+            pointer-events: none;
+        }
+
+        .tooltip:hover::after {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(-8px);
+        }
+
+        .tooltip.tooltip-top::after {
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .tooltip.tooltip-bottom::after {
+            top: 100%;
+            bottom: auto;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .tooltip.tooltip-left::after {
+            right: 100%;
+            top: 50%;
+            left: auto;
+            bottom: auto;
+            transform: translateY(-50%);
+        }
+
+        .tooltip.tooltip-right::after {
+            left: 100%;
+            top: 50%;
+            bottom: auto;
+            transform: translateY(-50%);
+        }
+
+        /* 状态指示器样式 */
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        .status-indicator.online {
+            background: var(--success-color);
+        }
+
+        .status-indicator.offline {
+            background: var(--danger-color);
+        }
+
+        .status-indicator.warning {
+            background: var(--warning-color);
+        }
+
+        .status-indicator.info {
+            background: var(--info-color);
+        }
+
+        .status-indicator.primary {
+            background: var(--primary-color);
+        }
+
+        /* 加载状态样式 */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s linear infinite;
+        }
+
+        .loading-dots {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .loading-dots span {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            animation: loadingDots 1.4s infinite ease-in-out;
+        }
+
+        .loading-dots span:nth-child(1) { animation-delay: -0.32s; }
+        .loading-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes loadingDots {
+            0%, 80%, 100% {
+                transform: scale(0);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* 网格布局样式 */
+        .grid {
+            display: grid;
+            gap: var(--spacing-md);
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .grid-auto-fit {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        .grid-auto-fill {
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        }
+
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 卡片组件样式 */
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-color);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-md);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 2px solid var(--border-light);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .card-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .card-content {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: var(--spacing-sm);
+            border-top: 2px solid var(--border-light);
+        }
+
+        /* 数据表格样式 */
+        .table-container {
+            overflow-x: auto;
+            border-radius: var(--radius);
+            border: 2px solid var(--border);
+            background: var(--surface);
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .table th,
+        .table td {
+            padding: var(--spacing-sm) var(--spacing-md);
+            text-align: left;
+            border-bottom: 2px solid var(--border-light);
+        }
+
+        .table th {
+            background: var(--border-light);
+            font-weight: 600;
+            color: var(--text-primary);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .table tr:hover {
+            background: var(--border-light);
+        }
+
+        .table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table-striped tbody tr:nth-child(even) {
+            background: var(--border-light);
+        }
+
+        .table-bordered th,
+        .table-bordered td {
+            border: 2px solid var(--border);
+        }
+
+        /* 进度条和滑块样式 */
+        .progress {
+            width: 100%;
+            height: 6px;
+            background: var(--border-light);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            border-radius: var(--radius-sm);
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        .progress-striped .progress-bar {
+            background-image: linear-gradient(45deg, 
+                rgba(255, 255, 255, 0.15) 25%, 
+                transparent 25%, 
+                transparent 50%, 
+                rgba(255, 255, 255, 0.15) 50%, 
+                rgba(255, 255, 255, 0.15) 75%, 
+                transparent 75%, 
+                transparent);
+            background-size: 20px 20px;
+            animation: progressStripes 1s linear infinite;
+        }
+
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: var(--radius-sm);
+            background: var(--border-light);
+            outline: none;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .slider:hover {
+            opacity: 1;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+            border: none;
+            box-shadow: var(--shadow);
+        }
+
+        /* 标签和徽章样式 */
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            background: var(--border-light);
+            color: var(--text-primary);
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 500;
+            margin: 2px;
+            transition: var(--transition);
+            cursor: default;
+        }
+
+        .tag:hover {
+            background: var(--border);
+            transform: translateY(-1px);
+        }
+
+        .tag.tag-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .tag.tag-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .tag.tag-warning {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .tag.tag-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .tag.tag-info {
+            background: var(--info-color);
+            color: white;
+        }
+
+        .tag.tag-accent {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 20px;
+            height: 20px;
+            padding: 0 6px;
+            background: var(--danger-color);
+            color: white;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+            line-height: 1;
+        }
+
+        .badge.badge-primary {
+            background: var(--primary-color);
+        }
+
+        .badge.badge-success {
+            background: var(--success-color);
+        }
+
+        .badge.badge-warning {
+            background: var(--warning-color);
+        }
+
+        .badge.badge-info {
+            background: var(--info-color);
+        }
+
+        .badge.badge-accent {
+            background: var(--accent-color);
+        }
+
+        /* 分页和面包屑导航样式 */
+        .pagination {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            margin: var(--spacing-lg) 0;
+        }
+
+        .pagination-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 var(--spacing-sm);
+            background: var(--surface);
+            color: var(--text-primary);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .pagination-item:hover {
+            background: var(--border-light);
+            border-color: var(--primary-color);
+            transform: translateY(-1px);
+        }
+
+        .pagination-item.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .pagination-item.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            margin: var(--spacing-md) 0;
+            font-size: 14px;
+        }
+
+        .breadcrumb-item {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .breadcrumb-item:hover {
+            color: var(--primary-color);
+        }
+
+        .breadcrumb-item.active {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .breadcrumb-separator {
+            color: var(--text-tertiary);
+            margin: 0 var(--spacing-xs);
+        }
+
+        /* 响应式工具类 */
+        .hidden {
+            display: none !important;
+        }
+
+        .visible {
+            display: block !important;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-left {
+            text-align: left;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-justify {
+            text-align: justify;
+        }
+
+        .float-left {
+            float: left;
+        }
+
+        .float-right {
+            float: right;
+        }
+
+        .clearfix::after {
+            content: '';
+            display: table;
+            clear: both;
+        }
+
+        .d-block {
+            display: block;
+        }
+
+        .d-inline {
+            display: inline;
+        }
+
+        .d-inline-block {
+            display: inline-block;
+        }
+
+        .d-flex {
+            display: flex;
+        }
+
+        .d-grid {
+            display: grid;
+        }
+
+        .d-none {
+            display: none;
+        }
+
+        /* 间距和尺寸工具类 */
+        .m-0 { margin: 0 !important; }
+        .m-1 { margin: var(--spacing-xs) !important; }
+        .m-2 { margin: var(--spacing-sm) !important; }
+        .m-3 { margin: var(--spacing-md) !important; }
+        .m-4 { margin: var(--spacing-lg) !important; }
+        .m-5 { margin: var(--spacing-xl) !important; }
+
+        .mt-0 { margin-top: 0 !important; }
+        .mt-1 { margin-top: var(--spacing-xs) !important; }
+        .mt-2 { margin-top: var(--spacing-sm) !important; }
+        .mt-3 { margin-top: var(--spacing-md) !important; }
+        .mt-4 { margin-top: var(--spacing-lg) !important; }
+        .mt-5 { margin-top: var(--spacing-xl) !important; }
+
+        .mb-0 { margin-bottom: 0 !important; }
+        .mb-1 { margin-bottom: var(--spacing-xs) !important; }
+        .mb-2 { margin-bottom: var(--spacing-sm) !important; }
+        .mb-3 { margin-bottom: var(--spacing-md) !important; }
+        .mb-4 { margin-bottom: var(--spacing-lg) !important; }
+        .mb-5 { margin-bottom: var(--spacing-xl) !important; }
+
+        .ml-0 { margin-left: 0 !important; }
+        .ml-1 { margin-left: var(--spacing-xs) !important; }
+        .ml-2 { margin-left: var(--spacing-sm) !important; }
+        .ml-3 { margin-left: var(--spacing-md) !important; }
+        .ml-4 { margin-left: var(--spacing-lg) !important; }
+        .ml-5 { margin-left: var(--spacing-xl) !important; }
+
+        .mr-0 { margin-right: 0 !important; }
+        .mr-1 { margin-right: var(--spacing-xs) !important; }
+        .mr-2 { margin-right: var(--spacing-sm) !important; }
+        .mr-3 { margin-right: var(--spacing-md) !important; }
+        .mr-4 { margin-right: var(--spacing-lg) !important; }
+        .mr-5 { margin-right: var(--spacing-xl) !important; }
+
+        .p-0 { padding: 0 !important; }
+        .p-1 { padding: var(--spacing-xs) !important; }
+        .p-2 { padding: var(--spacing-sm) !important; }
+        .p-3 { padding: var(--spacing-md) !important; }
+        .p-4 { padding: var(--spacing-lg) !important; }
+        .p-5 { padding: var(--spacing-xl) !important; }
+
+        .pt-0 { padding-top: 0 !important; }
+        .pt-1 { padding-top: var(--spacing-xs) !important; }
+        .pt-2 { padding-top: var(--spacing-sm) !important; }
+        .pt-3 { padding-top: var(--spacing-md) !important; }
+        .pt-4 { padding-top: var(--spacing-lg) !important; }
+        .pt-5 { padding-top: var(--spacing-xl) !important; }
+
+        .pb-0 { padding-bottom: 0 !important; }
+        .pb-1 { padding-bottom: var(--spacing-xs) !important; }
+        .pb-2 { padding-bottom: var(--spacing-sm) !important; }
+        .pb-3 { padding-bottom: var(--spacing-md) !important; }
+        .pb-4 { padding-bottom: var(--spacing-lg) !important; }
+        .pb-5 { padding-bottom: var(--spacing-xl) !important; }
+
+        .pl-0 { padding-left: 0 !important; }
+        .pl-1 { padding-left: var(--spacing-xs) !important; }
+        .pl-2 { padding-left: var(--spacing-sm) !important; }
+        .pl-3 { padding-left: var(--spacing-md) !important; }
+        .pl-4 { padding-left: var(--spacing-lg) !important; }
+        .pl-5 { padding-left: var(--spacing-xl) !important; }
+
+        .pr-0 { padding-right: 0 !important; }
+        .pr-1 { padding-right: var(--spacing-xs) !important; }
+        .pr-2 { padding-right: var(--spacing-sm) !important; }
+        .pr-3 { padding-right: var(--spacing-md) !important; }
+        .pr-4 { padding-right: var(--spacing-lg) !important; }
+        .pr-5 { padding-right: var(--spacing-xl) !important; }
+
+        /* 动画关键帧 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInDown {
+            from {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                transform: translateX(-30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 53%, 80%, 100% {
+                transform: translate3d(0, 0, 0);
+            }
+            40%, 43% {
+                transform: translate3d(0, -30px, 0);
+            }
+            70% {
+                transform: translate3d(0, -15px, 0);
+            }
+            90% {
+                transform: translate3d(0, -4px, 0);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        @keyframes progressStripes {
+            0% {
+                background-position: 20px 0;
+            }
+            100% {
+                background-position: 0 0;
+            }
+        }
+
+        /* 响应式断点 */
+        @media (max-width: 1200px) {
+            .container {
+                max-width: 960px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .container {
+                max-width: 720px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                max-width: 540px;
+            }
+            
+            .header {
+                padding: var(--spacing-md);
+            }
+            
+            .main-content {
+                padding: var(--spacing-md);
+            }
+            
+            .card {
+                padding: var(--spacing-md);
+            }
+            
+            .btn {
+                padding: var(--spacing-sm) var(--spacing-md);
+                font-size: 14px;
+            }
+            
+            .input-group {
+                flex-direction: column;
+                gap: var(--spacing-sm);
+            }
+            
+            .input-group .input {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                max-width: 100%;
+                padding: 0 var(--spacing-sm);
+            }
+            
+            .header {
+                padding: var(--spacing-sm);
+            }
+            
+            .main-content {
+                padding: var(--spacing-sm);
+            }
+            
+            .card {
+                padding: var(--spacing-sm);
+            }
+            
+            .btn {
+                width: 100%;
+                margin-bottom: var(--spacing-sm);
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            .btn-group .btn {
+                margin-right: 0;
+                margin-bottom: var(--spacing-sm);
+            }
+        }
+
+        /* 深色模式支持 */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --surface: #1a1a1a;
+                --surface-hover: #2a2a2a;
+                --text-primary: #ffffff;
+                --text-secondary: #b0b0b0;
+                --text-tertiary: #808080;
+                --border: #404040;
+                --border-light: #2a2a2a;
+                --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+                --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.4);
+                --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.5);
+            }
+        }
+
+        /* 打印样式 */
+        @media print {
+            * {
+                background: transparent !important;
+                color: black !important;
+                box-shadow: none !important;
+                text-shadow: none !important;
+            }
+
+            .header,
+            .footer,
+            .btn,
+            .modal,
+            .tooltip::after {
+                display: none !important;
+            }
+
+            .container {
+                max-width: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            .card {
+                border: 1px solid #ccc !important;
+                box-shadow: none !important;
+                page-break-inside: avoid;
+            }
+
+            .table {
+                border-collapse: collapse !important;
+            }
+
+            .table th,
+            .table td {
+                border: 1px solid #ccc !important;
+            }
+
+            a {
+                text-decoration: underline !important;
+            }
+
+            a[href]:after {
+                content: " (" attr(href) ")" !important;
+            }
+        }
+
+        /* 高对比度模式支持 */
+        @media (prefers-contrast: high) {
+            :root {
+                --border: #000000;
+                --border-light: #333333;
+                --text-secondary: #000000;
+                --text-tertiary: #333333;
+            }
+            
+            .btn,
+            .input,
+            .card {
+                border-width: 3px;
+            }
+        }
+
+        /* 减少动画偏好 */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        .container {
+            padding: 0;
+            background: var(--surface);
+            border-radius: 0;
+            margin: 0;
+            box-shadow: none;
+            min-height: 100vh;
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.02) 0%, rgba(139, 92, 246, 0.02) 100%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 0;
+            padding: 24px 16px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            border-radius: 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 24px;
+            margin-bottom: 8px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header .subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 13px;
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .tabs {
+            display: flex;
+            margin: 0;
+            background: var(--surface);
+            border-bottom: 2px solid var(--border);
+            padding: 0;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+            position: relative;
+            width: 100%;
+        }
+
+        .tabs::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
+        }
+
+        .tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab {
+            padding: 12px 14px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: var(--transition);
+            font-weight: 600;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            position: relative;
+            font-size: 13px;
+            background: transparent;
+            flex: 1;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .tab::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background: var(--gradient-primary);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .tab:hover {
+            color: var(--primary-color);
+            background: var(--border-light);
+        }
+
+        .tab:hover::before {
+            width: 50%;
+        }
+
+        .tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+            background: var(--border-light);
+        }
+
+        .tab.active::before {
+            width: 100%;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 16px;
+            transform: translateX(0);
+            opacity: 0;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .tab-content.active {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 添加更多动画效果 */
+        .section {
+            animation: slideInUp 0.4s ease-out;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 按钮点击波纹效果 */
+        .btn {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:active::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        /* 输入框聚焦动画 */
+        .form-input:focus {
+            transform: scale(1.02);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            border-color: var(--primary-color);
+        }
+
+        /* 状态项悬停时的图标动画 */
+        .status-item:hover .status-value {
+            transform: scale(1.1);
+            transition: transform 0.2s ease;
+        }
+
+        /* 标签页切换时的滑动效果 */
+        .tab {
+            position: relative;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary-color);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: scaleX(0); }
+            to { transform: scaleX(1); }
+        }
+
+        /* 添加脉冲动画效果 */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* 添加浮动动画效果 */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* 加载动画 */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* 淡入淡出动画 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .fade-out {
+            animation: fadeOut 0.5s ease-out;
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-10px); }
+        }
+
+        /* 工具提示样式 */
+        .tooltip {
+            position: relative;
+            cursor: help;
+        }
+
+        .tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text-primary);
+            color: white;
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .tooltip:hover::after {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(-8px);
+        }
+
+        /* 状态指示器 */
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        .status-indicator.online {
+            background: var(--success-color);
+        }
+
+        .status-indicator.offline {
+            background: var(--danger-color);
+        }
+
+        .status-indicator.warning {
+            background: var(--warning-color);
+        }
+
+        .section {
+            margin-bottom: 24px;
+            padding: 20px;
+            background: var(--surface);
+            border-radius: var(--radius);
+            border: 2px solid var(--border);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .section:hover {
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .section:hover::before {
+            opacity: 1;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-light);
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+            width: 100%;
+        }
+
+        .form-group:hover .form-label {
+            color: var(--primary-color);
+            transition: color 0.2s ease;
+        }
+
+        .form-group:hover .form-input {
+            border-color: var(--primary-light);
+            box-shadow: var(--shadow);
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 13px;
+            transition: color 0.2s ease;
+            position: relative;
+        }
+
+        .form-label::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .form-group:hover .form-label::after {
+            width: 100%;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            transition: var(--transition);
+            background: var(--surface);
+            color: var(--text-primary);
+            box-shadow: var(--shadow);
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            background: white;
+            transform: scale(1.02);
+        }
+
+        .form-input:hover {
+            border-color: var(--primary-light);
+            box-shadow: var(--shadow);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+        }
+
+        .form-input:focus::placeholder {
+            opacity: 0.5;
+        }
+
+        .form-textarea {
+            min-height: 80px;
+            resize: vertical;
+            font-family: inherit;
+            line-height: 1.6;
+            transition: var(--transition);
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            transform: scale(1.01);
+        }
+
+        .form-textarea:hover {
+            border-color: var(--primary-light);
+            box-shadow: var(--shadow);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+            gap: 12px;
+            padding: 14px 16px;
+            background: var(--border-light);
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+            border: 1px solid var(--border);
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .checkbox-group:hover {
+            background: var(--border);
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .checkbox-group:hover label {
+            color: var(--primary-color);
+        }
+
+        .checkbox-group:hover input[type="checkbox"] {
+            accent-color: var(--primary-color);
+            transform: scale(1.1);
+            transition: all 0.2s ease;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            font-size: 14px;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            position: relative;
+            width: 100%;
+        }
+
+        .button-group::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 2px;
+            background: var(--gradient-primary);
+            border-radius: 1px;
+            opacity: 0.4;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 44px;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xl);
+            filter: brightness(1.1);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            filter: brightness(0.95);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            filter: none;
+        }
+
+        .btn.loading {
+            position: relative;
+            color: transparent;
+        }
+
+        .btn.loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid transparent;
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .form-input:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background: var(--border-light);
+        }
+
+        .form-input:disabled:hover {
+            border-color: var(--border);
+            box-shadow: none;
+            transform: none;
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--gradient-success);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--gradient-warning);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--gradient-danger);
+            color: white;
+        }
+
+        .btn-info {
+            background: var(--gradient-info);
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .status-display {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+            position: relative;
+            width: 100%;
+        }
+
+        .status-display::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+            opacity: 0.6;
+        }
+
+        .status-item {
+            background: var(--surface);
+            padding: 20px 16px;
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--border);
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .status-item:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary-color);
+        }
+
+        .status-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .status-item:hover::after {
+            opacity: 1;
+        }
+
+        .status-item:hover .status-value {
+            transform: scale(1.1);
+            transition: transform 0.2s ease;
+        }
+
+        .status-item:hover .status-label {
+            color: var(--primary-color);
+            transition: color 0.2s ease;
+        }
+
+        .status-item:hover .status-value {
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .status-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary-color);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .status-item:hover::before {
+            transform: scaleX(1);
+        }
+
+        .status-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary-color);
+        }
+
+        .status-label {
+            display: block;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.8;
+        }
+
+        .status-value {
+            display: block;
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-value.success {
+            color: var(--success-color);
+            text-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+        }
+
+        .status-value.warning {
+            color: var(--warning-color);
+            text-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
+        }
+
+        .status-value.error {
+            color: var(--danger-color);
+            text-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+        }
+
+        .status-value.info {
+            color: var(--info-color);
+            text-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+        }
+
+        #sendResultsArea {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+            padding: 16px;
+            background: var(--surface);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            scrollbar-width: thin;
+        }
+
+        #sendResultsArea::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #sendResultsArea::-webkit-scrollbar-track {
+            background: var(--border-light);
+            border-radius: 3px;
+        }
+
+        #sendResultsArea        ::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 3px;
+            border: 1px solid var(--border);
+        }
+
+        #sendResultsArea::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-color);
+        }
+
+        /* 全局滚动条样式 */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--border-light);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 3px;
+            border: 1px solid var(--border);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-color);
+        }
+
+        .success-message {
+            border-left: 4px solid var(--success-color) !important;
+            background: #f0fdf4;
+            border-color: #bbf7d0;
+            border-radius: var(--radius-sm);
+            padding: 16px 20px;
+            margin: 16px 0;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .success-message:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .error-message {
+            border-left: 4px solid var(--danger-color) !important;
+            background: #fef2f2;
+            border-color: #fecaca;
+            border-radius: var(--radius-sm);
+            padding: 16px 20px;
+            margin: 16px 0;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .error-message:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .warning-message {
+            border-left: 4px solid var(--warning-color) !important;
+            background: #fffbeb;
+            border-color: #fed7aa;
+            border-radius: var(--radius-sm);
+            padding: 16px 20px;
+            margin: 16px 0;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .warning-message:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .info-message {
+            border-left: 4px solid var(--info-color) !important;
+            background: #eff6ff;
+            border-color: #bfdbfe;
+            border-radius: var(--radius-sm);
+            padding: 16px 20px;
+            margin: 16px 0;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .info-message:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .summary-message {
+            border-left: 4px solid var(--primary-color) !important;
+            font-weight: 700;
+            background: #f8fafc;
+            border-color: var(--primary-light);
+            border-radius: var(--radius-sm);
+            padding: 16px 20px;
+            margin: 16px 0;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .summary-message:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .info-box {
+            background: #eff6ff;
+            border: 2px solid #bfdbfe;
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .info-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-info);
+            opacity: 0.8;
+        }
+
+        .info-box:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--info-color);
+        }
+
+        .info-box h4 {
+            color: var(--info-color);
+            margin-bottom: 10px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .info-box ul {
+            margin-left: 16px;
+            color: var(--text-secondary);
+        }
+
+        .info-box li {
+            margin-bottom: 6px;
+            line-height: 1.4;
+            font-size: 13px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 16px;
+            margin-left: 6px;
+        }
+
+        .badge-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 480px) {
+            body {
+                width: 100%;
+                min-width: 320px;
+            }
+            
+            .container {
+                padding: 0;
+            }
+            
+            .tab-content {
+                padding: 12px;
+            }
+            
+            .section {
+                padding: 16px;
+            }
+            
+            .status-display {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+            
+            .status-item {
+                padding: 16px 12px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .btn {
+                width: 100%;
+                padding: 14px 20px;
+            }
+        }
+
+        /* 改进的滚动条样式 */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--border-light);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 4px;
+            transition: background 0.2s ease;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-color);
+        }
+
+        ::-webkit-scrollbar-corner {
+            background: var(--border-light);
+        }
+
+        /* 改进的表单样式 */
+        .form-input, .form-textarea {
+            transition: all 0.3s ease;
+        }
+
+        .form-input:hover, .form-textarea:hover {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.1);
+        }
+
+        /* 改进的复选框样式 */
+        .checkbox-group {
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-group:hover {
+            background: var(--border);
+            transform: translateX(4px);
+        }
+
+        /* 改进的状态显示 */
+        .status-display {
+            gap: 20px;
+        }
+
+        .status-item {
+            transition: all 0.3s ease;
+        }
+
+        /* 改进的信息框样式 */
+        .info-box {
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--info-color);
+        }
+
+        .info-box:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* 滚动条美化 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--border-light);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-color);
+        }
+
+        /* 输入框焦点效果 */
+        .form-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        /* 按钮悬停效果增强 */
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        /* 状态项悬停效果 */
+        .status-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        /* 标签页切换动画 */
+        .tab-content {
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        /* 表单组悬停效果 */
+        .form-group:hover .form-label {
+            color: var(--primary-color);
+        }
+
+        /* 复选框组悬停效果 */
+        .checkbox-group:hover {
+            border-color: var(--primary-light);
+        }
+        
+        /* 保存选项对话框样式 */
+        .save-options-dialog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+        
+        .save-options-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .save-options-content h3 {
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            text-align: center;
+            font-size: 18px;
+        }
+        
+        .save-options-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .save-options-buttons .btn {
+            padding: 12px 20px;
+            font-size: 14px;
+            border-radius: var(--radius);
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+        }
+        
+        .save-options-buttons .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .save-preview {
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+        }
+        
+        .save-preview h4 {
+            margin-bottom: 15px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .links-preview {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            padding: 10px;
+            background: var(--background);
+        }
+        
+        .link-item {
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            background: white;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-light);
+            font-size: 12px;
+            word-break: break-all;
+            line-height: 1.4;
+        }
+        
+        .link-item:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <div class="header">
+            <h1>🚀 拼多多聊天监控器</h1>
+            <div class="subtitle">智能监控 • 自动回复 • 身份判别</div>
+        </div>
+
+        <!-- 标签页 -->
+        <div class="tabs">
+            <div class="tab active" data-tab="monitor">📊 监控状态</div>
+            <div class="tab" data-tab="chat">💬 聊天监控</div>
+            <div class="tab" data-tab="api">🤖 API配置</div>
+            <div class="tab" data-tab="pdd">🛍️ 拼多多配置</div>
+            <div class="tab" data-tab="links">🔗 批量链接</div>
+            <div class="tab" data-tab="batch-message">💬 批量发送消息</div>
+        </div>
+
+        <!-- 监控状态标签页 -->
+        <div class="tab-content active" id="monitor-tab">
+            <div class="section">
+                <div class="section-title">📊 监控状态</div>
+                
+                <div class="status-display">
+                    <div class="status-item">
+                        <span class="status-label">监控状态</span>
+                        <span class="status-value" id="monitorStatus">未启动</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">聊天监控</span>
+                        <span class="status-value" id="chatMonitorStatus">未启动</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">消息数量</span>
+                        <span class="status-value" id="messageCount">0</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">最后检查</span>
+                        <span class="status-value" id="lastCheckTime">-</span>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-success" id="startMonitorBtn">🚀 开始监控</button>
+                    <button class="btn btn-danger" id="stopMonitorBtn">⏹️ 停止监控</button>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-info" id="checkStatusBtn">📊 检查状态</button>
+                    <button class="btn btn-warning" id="refreshStatusBtn">🔄 刷新状态</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 聊天监控标签页 -->
+        <div class="tab-content" id="chat-tab">
+            <div class="section">
+                <div class="section-title">💬 聊天监控设置</div>
+                
+                <div class="form-group">
+                    <label class="form-label">🎯 聊天容器选择器</label>
+                    <input type="text" class="form-input" id="chatSelectorInput" 
+                           value="#chat-detail-list" placeholder="例如: #chat-detail-list">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">⏰ 检查间隔 (毫秒)</label>
+                    <input type="number" class="form-input" id="checkIntervalInput" 
+                           value="1000" min="500" max="10000" step="500">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">📚 最大历史记录</label>
+                    <input type="number" class="form-input" id="maxHistoryInput" 
+                           value="100" min="10" max="1000" step="10">
+                </div>
+
+
+
+                <div class="button-group">
+                    <button class="btn btn-success" id="startChatMonitorBtn">🚀 开始聊天监控</button>
+                    <button class="btn btn-danger" id="stopChatMonitorBtn">⏹️ 停止聊天监控</button>
+                    <button class="btn btn-warning" id="debugConnectionBtn">🔧 诊断连接</button>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-info" id="getChatStatusBtn">📊 获取聊天状态</button>
+                    <button class="btn btn-warning" id="getChatHistoryBtn">📜 获取聊天历史</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">🔍 身份判别设置</div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="roleFilterEnabledCheckbox" checked>
+                    <label for="roleFilterEnabledCheckbox">启用身份过滤</label>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="sendServiceMessagesCheckbox" checked>
+                    <label for="sendServiceMessagesCheckbox">发送客服消息</label>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="sendCustomerMessagesCheckbox" checked>
+                    <label for="sendCustomerMessagesCheckbox">发送客户消息</label>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="sendUnknownRoleMessagesCheckbox" checked>
+                    <label for="sendUnknownRoleMessagesCheckbox">发送身份未知的消息</label>
+                </div>
+
+                <div class="info-box">
+                    <h4>身份判别说明</h4>
+                    <ul>
+                        <li>基于data-pin属性自动识别消息发送者身份</li>
+                        <li>data-pin="0": 客户消息</li>
+                        <li>data-pin="1": 客服消息</li>
+                        <li>支持关键词匹配和智能推断</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- API配置标签页 -->
+        <div class="tab-content" id="api-tab">
+            <div class="section">
+                <div class="section-title">🤖 API配置</div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="apiConfigEnabledCheckbox" checked>
+                    <label for="apiConfigEnabledCheckbox">启用API发送</label>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">🌐 API端点</label>
+                    <input type="url" class="form-input" id="apiEndpointInput" 
+                           value="http://localhost:8090/api/chat/send" 
+                           placeholder="例如: http://localhost:8090/api/chat/send">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">⏱️ 超时时间 (毫秒)</label>
+                    <input type="number" class="form-input" id="apiTimeoutInput" 
+                           value="15000" min="5000" max="60000" step="1000">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">🔄 最大重试次数</label>
+                    <input type="number" class="form-input" id="apiMaxRetriesInput" 
+                           value="3" min="1" max="10" step="1">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">⏳ 重试延迟 (毫秒)</label>
+                    <input type="number" class="form-input" id="apiRetryDelayInput" 
+                           value="1000" min="500" max="5000" step="100">
+                </div>
+
+
+                <div class="form-group">
+                    <label class="form-label">⏱️ 消息等待时间 (秒)</label>
+                    <input type="number" class="form-input" id="messageWaitDurationInput" 
+                           value="10" min="1" max="60" step="1">
+                    <small style="color: var(--text-muted); font-size: 12px; margin-top: 4px; display: block;">
+                        <strong>功能说明：</strong>监测到新消息后的等待时间，如果等待期间有新消息则重新计时<br>
+                        • <strong>默认10秒</strong>：等待10秒后发送请求到后端API<br>
+                        • <strong>1-60秒</strong>：可调整等待时间范围<br>
+                        • <strong>建议设置</strong>：5-15秒，确保消息完整性
+                    </small>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-success" id="saveAPIConfigBtn">💾 保存API配置</button>
+                    <button class="btn btn-warning" id="resetAPIConfigBtn">🔄 重置配置</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">🔍 消息过滤设置</div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="messageFilterEnabledCheckbox" checked>
+                    <label for="messageFilterEnabledCheckbox">启用消息过滤</label>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">✅ 包含关键词 (用逗号分隔)</label>
+                    <input type="text" class="form-input" id="includeKeywordsInput" 
+                           value="客服,客服人员,在线客服" placeholder="例如: 客服,客服人员,在线客服">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">❌ 排除关键词 (用逗号分隔)</label>
+                    <input type="text" class="form-input" id="excludeKeywordsInput" 
+                           value="系统,通知,广告" placeholder="例如: 系统,通知,广告">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">🚫 排除特定消息 (用逗号分隔)</label>
+                    <input type="text" class="form-input" id="excludedMessagesInput" 
+                           value="当前版本暂不支持查看此消息，请去App查看。,此消息由机器人发送" 
+                           placeholder="例如: 当前版本暂不支持查看此消息，请去App查看。,此消息由机器人发送">
+                    <small style="color: var(--text-muted); font-size: 12px; margin-top: 4px; display: block;">这些消息将不会发送给后端API</small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">🔔 重复链接提醒设置</label>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <button type="button" class="btn btn-outline btn-sm" id="resetDuplicateReminderBtn">
+                            🔄 重新启用重复链接提醒
+                        </button>
+                        <span id="duplicateReminderStatus" style="color: var(--text-muted); font-size: 12px;">
+                            状态: 检测中...
+                        </span>
+                    </div>
+                    <small style="color: var(--text-muted); font-size: 12px; margin-top: 4px; display: block;">如果之前设置了"不再提醒"，可以点击此按钮重新启用</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- 拼多多配置标签页 -->
+        <div class="tab-content" id="pdd-tab">
+            <div class="section">
+                <div class="section-title">🛍️ 拼多多聊天配置</div>
+                
+                <div class="form-group">
+                    <label class="form-label">📱 PDD用户ID (pdduid)</label>
+                    <input type="text" class="form-input" id="pdduidInput" 
+                           placeholder="例如: 5463180454658">
+                    <small style="color: var(--text-muted); font-size: 12px; margin-top: 4px; display: block;">自动获取或手动输入</small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">🏪 商城ID (mall_id)</label>
+                    <input type="text" class="form-input" id="mallIdInput" 
+                           placeholder="自动获取或手动输入">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">🛍️ 商品ID (goods_id)</label>
+                    <input type="text" class="form-input" id="goodsIdInput" 
+                           placeholder="自动获取或手动输入">
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="autoGetCookieCheckbox" checked>
+                    <label for="autoGetCookieCheckbox">自动获取页面信息</label>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="pddChatEnabledCheckbox" checked>
+                    <label for="pddChatEnabledCheckbox">启用拼多多聊天接口</label>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="autoSendEnabledCheckbox" checked>
+                    <label for="autoSendEnabledCheckbox">自动发送AI回复</label>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">⏱️ AI回复延迟时间 (秒)</label>
+                    <input type="number" class="form-input" id="aiReplyIntervalInput" 
+                           value="0" min="0" max="3600" step="1">
+                    <small style="color: var(--text-muted); font-size: 12px; margin-top: 4px; display: block;">
+                        <strong>功能说明：</strong>设置从监测到消息到发送AI回复的延迟时间<br>
+                        • <strong>0秒</strong>：立即发送AI回复<br>
+                        • <strong>5-30秒</strong>：延迟发送，模拟人工回复时间<br>
+                        • <strong>建议设置</strong>：5-15秒，避免回复过于频繁
+                    </small>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="autoPasteEnabledCheckbox" checked>
+                    <label for="autoPasteEnabledCheckbox">优先使用自动粘贴发送</label>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-warning" id="refreshPageInfoBtn">🔄 刷新页面信息</button>
+                    <button class="btn btn-success" id="savePddConfigBtn">💾 保存配置</button>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-danger" id="clearCookieBtn">🗑️ 清除Cookie</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">🍪 Cookie状态</div>
+                
+                <div class="status-display">
+                    <div class="status-item">
+                        <span class="status-label">Cookie状态</span>
+                        <span class="status-value" id="cookieStatus">检测中...</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Cookie数量</span>
+                        <span class="status-value" id="cookieCount">-</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">🍪 手动设置Cookie</label>
+                    <textarea class="form-input form-textarea" id="cookieInput" 
+                              placeholder="粘贴完整的Cookie字符串"></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-info" id="setCookieBtn">🔧 手动设置Cookie</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 批量链接标签页 -->
+        <div class="tab-content" id="links-tab">
+            <div class="section">
+                <div class="section-title">🔗 批量链接管理</div>
+                
+                <!-- 新增：手动添加链接区域 -->
+                <div class="form-group">
+                    <label class="form-label">🔗 手动添加多个链接</label>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <textarea class="form-input form-textarea" id="manualLinkInput" 
+                                  placeholder="输入多个拼多多链接，每行一个...&#10;例如:&#10;https://mobile.yangkeduo.com/goods.html?goods_id=123&#10;https://mobile.yangkeduo.com/goods.html?goods_id=456" 
+                                  style="flex: 1; min-height: 80px;"></textarea>
+                        <div style="display: flex; flex-direction: column; gap: 5px;">
+                            <button type="button" class="btn btn-primary btn-sm" id="addManualLinkBtn">➕ 添加</button>
+                            <button type="button" class="btn btn-info btn-sm" id="checkLinkFormatBtn" title="检查链接格式">🔍 检查</button>
+                        </div>
+                    </div>
+                    <small style="color: var(--text-muted); font-size: 12px; margin-top: 4px; display: block;">手动添加的链接会自动保存到TXT文件，支持多个链接输入（每行一个）</small>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">📋 批量链接输入</label>
+                    <textarea class="form-input form-textarea" id="batchLinksInput" 
+                              placeholder="每行一个链接，例如:&#10;https://mobile.yangkeduo.com/goods.html?goods_id=123&#10;https://mobile.yangkeduo.com/goods.html?goods_id=456"></textarea>
+                    <div style="margin-top: 8px; font-size: 12px; color: var(--text-muted);">
+                        当前链接数量: <span id="linkCount" class="status-value info">0</span>
+                    </div>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="autoOpenLinksCheckbox" checked>
+                    <label for="autoOpenLinksCheckbox">自动打开链接</label>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="autoStartMonitoringCheckbox" checked>
+                    <label for="autoStartMonitoringCheckbox">自动开启监听</label>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="autoSaveToTxtCheckbox" checked>
+                    <label for="autoSaveToTxtCheckbox">自动保存到TXT文件</label>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">⏱️ 打开间隔 (秒)</label>
+                    <input type="number" class="form-input" id="openIntervalInput" 
+                           value="3" min="1" max="60" step="1">
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-success" id="batchOpenLinksBtn">🚀 一个一个打开链接</button>
+                    <button class="btn btn-warning" id="stopBatchOpenBtn" style="display: none;">⏹️ 停止打开</button>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-info" id="saveLinksListBtn">💾 保存链接列表</button>
+                    <button class="btn btn-danger" id="clearLinksBtn">🗑️ 清空链接</button>
+                </div>
+                
+                <!-- 错误链接管理 -->
+                <div class="section" style="margin-top: 20px; border: 1px solid var(--danger-color); border-radius: var(--radius); padding: 15px; background: rgba(239, 68, 68, 0.05);">
+                    <div class="section-title" style="color: var(--danger-color);">⚠️ 错误链接管理</div>
+                    <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 15px;">
+                        检测到以下链接存在错误或店铺已下线，建议从原始链接列表中删除：
+                    </p>
+                    
+                    <div class="form-group">
+                        <label class="form-label">🔗 错误链接列表</label>
+                        <textarea class="form-input form-textarea" id="errorLinksInput" 
+                                  placeholder="错误链接将在这里显示..." readonly style="background: #fef2f2; border-color: var(--danger-color); color: var(--danger-color);"></textarea>
+                        <div style="margin-top: 8px; font-size: 12px; color: var(--text-muted);">
+                            错误链接数量: <span id="errorLinksCount" class="status-value danger">0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button class="btn btn-danger" id="removeErrorLinksBtn" disabled>🗑️ 从原始链接中删除错误链接</button>
+                                                  <button class="btn btn-warning" id="exportErrorLinksBtn" disabled>📤 导出错误链接</button>
+                          <button class="btn btn-info" id="clearErrorLinksBtn" disabled>🧹 清空错误链接</button>
+                          <button class="btn btn-secondary" id="verifyErrorLinksBtn" disabled>🔍 验证错误链接</button>
+                          <button class="btn btn-success" id="cleanNormalLinksBtn" disabled>✨ 清理无效链接</button>
+                    </div>
+                    
+                    <div class="info-box" style="margin-top: 15px; background: rgba(239, 68, 68, 0.1); border-left: 4px solid var(--danger-color);">
+                        <h4>📋 错误链接说明</h4>
+                        <ul style="color: var(--text-secondary);">
+                            <li>系统会自动检测链接打开时的错误信息</li>
+                            <li>包括：店铺下线、商品不存在、链接失效等</li>
+                            <li>点击"删除错误链接"会从原始链接列表中移除这些链接</li>
+                            <li>建议定期清理错误链接以保持链接列表的有效性</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- 已打开链接管理 -->
+                <div class="section" style="margin-top: 20px; border: 1px solid var(--info-color); border-radius: var(--radius); padding: 15px; background: rgba(59, 130, 246, 0.05);">
+                    <div class="section-title" style="color: var(--info-color);">📋 已打开链接管理</div>
+                    <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 15px;">
+                        显示已经打开过的链接记录，避免重复打开相同链接：
+                    </p>
+                    
+                    <div class="form-group">
+                        <label class="form-label">🔗 已打开链接列表</label>
+                        <textarea class="form-input form-textarea" id="openedLinksInput" 
+                                  placeholder="已打开链接将在这里显示..." readonly style="background: #eff6ff; border-color: var(--info-color); color: var(--info-color);"></textarea>
+                        <div style="margin-top: 8px; font-size: 12px; color: var(--text-muted);">
+                            已打开链接数量: <span id="openedLinksCount" class="status-value info">0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button class="btn btn-info" id="exportOpenedLinksBtn" disabled>📤 导出已打开链接</button>
+                        <button class="btn btn-warning" id="clearOpenedLinksBtn" disabled>🧹 清空已打开记录</button>
+                        <button class="btn btn-secondary" id="refreshOpenedLinksBtn">🔄 刷新记录</button>
+                    </div>
+                    
+                    <div class="info-box" style="margin-top: 15px; background: rgba(59, 130, 246, 0.1); border-left: 4px solid var(--info-color);">
+                        <h4>📋 已打开链接说明</h4>
+                        <ul style="color: var(--text-secondary);">
+                            <li>系统会自动记录每次打开的链接</li>
+                            <li>包括：打开时间、打开次数、最后打开时间</li>
+                            <li>添加新链接时会检查是否已经打开过</li>
+                            <li>已打开过的链接不会重复保存和打开</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- 保存选项对话框 -->
+                <div class="save-options-dialog" id="saveOptionsDialog" style="display: none;">
+                    <div class="save-options-content">
+                        <h3>选择保存方式</h3>
+                        <div class="save-options-buttons">
+                            <button class="btn btn-primary" id="saveNewFileBtn">
+                                💾 保存到新文件
+                            </button>
+                            <button class="btn btn-info" id="selectExistingFileBtn">
+                                📁 选择现有文件保存
+                            </button>
+                            <button class="btn btn-secondary" id="cancelSaveBtn">
+                                ❌ 取消
+                            </button>
+                        </div>
+                        <div class="save-preview">
+                            <h4>预览 (共 <span id="previewLinksCount">0</span> 个链接):</h4>
+                            <div class="links-preview" id="linksPreview">
+                                <!-- 链接预览将在这里显示 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 批量打开链接状态显示 -->
+                <div class="section" style="margin-top: 20px;">
+                    <div class="section-title">📊 批量打开状态</div>
+                    
+                    <div class="status-display">
+                        <div class="status-item">
+                            <span class="status-label">打开状态</span>
+                            <span class="status-value" id="batchOpenStatus">未开始</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">总链接数</span>
+                            <span class="status-value" id="totalLinksCount">0</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">当前进度</span>
+                            <span class="status-value" id="currentProgress">0/0</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">已启动</span>
+                            <span class="status-value" id="startedLinksCount">0</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">失败</span>
+                            <span class="status-value" id="failedLinksCount">0</span>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <h4>📋 批量打开说明</h4>
+                        <ul>
+                            <li>此功能会<strong>一个一个地</strong>打开所有导入的链接</li>
+                            <li>可选择是否自动开启聊天监控</li>
+                            <li>可设置链接之间的打开间隔（建议2-5秒）</li>
+                            <li>监控状态会实时更新显示</li>
+                            <li>每个链接会等待前一个链接处理完成后再打开</li>
+                            <li><strong>新增：</strong>手动添加的链接会自动保存到TXT文件</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">📁 文件导入导出</div>
+                
+                <div class="form-group">
+                    <label class="form-label">📁 选择TXT文件</label>
+                    <input type="file" class="form-input" id="fileInput" accept=".txt" style="display: none;">
+                    <small style="color: var(--text-muted); font-size: 12px; margin-top: 4px; display: block;">支持包含拼多多客服链接的txt文档，每行一个链接</small>
+                    
+                    <!-- 显示当前选中的TXT文件 -->
+                    <div class="selected-file-info" id="selectedFileInfo" style="margin-top: 8px; padding: 8px; background: var(--bg-secondary); border-radius: 4px; display: none;">
+                        <span style="color: var(--text-muted); font-size: 12px;">📁 当前选中: </span>
+                        <span id="selectedFileName" style="color: var(--text-primary); font-weight: 500;"></span>
+                    </div>
+                </div>
+
+                <!-- TXT导入状态显示 -->
+                <div class="status-display">
+                    <div class="status-item">
+                        <span class="status-label">导入状态</span>
+                        <span class="status-value" id="txtImportStatus">未导入</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">有效链接</span>
+                        <span class="status-value" id="txtValidLinksCount">0</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">无效链接</span>
+                        <span class="status-value" id="txtInvalidLinksCount">0</span>
+                    </div>
+                </div>
+
+                <!-- TXT导入选项 -->
+                <div class="checkbox-group">
+                    <input type="checkbox" id="autoOpenTxtLinksCheckbox" checked>
+                    <label for="autoOpenTxtLinksCheckbox">导入后自动打开链接</label>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="autoStartTxtMonitoringCheckbox" checked>
+                    <label for="autoStartTxtMonitoringCheckbox">导入后自动开启监听</label>
+                </div>
+
+                <!-- 文件监控功能 -->
+                <div class="form-group" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-color);">
+                    <div class="section-subtitle">🔍 文件监控功能</div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="enableFileMonitoringCheckbox" checked>
+                        <label for="enableFileMonitoringCheckbox">启用文件监控</label>
+                    </div>
+                    
+                    <div class="form-group" id="fileMonitorSettings" style="margin-top: 10px;">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="autoOpenNewLinksCheckbox" checked>
+                            <label for="autoOpenNewLinksCheckbox">检测到新链接时自动打开</label>
+                        </div>
+                        
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="autoStartNewLinksMonitoringCheckbox" checked>
+                            <label for="autoStartNewLinksMonitoringCheckbox">自动启动新链接监听</label>
+                        </div>
+                        
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="autoSendGreetingCheckbox" checked>
+                            <label for="autoSendGreetingCheckbox">自动发送问候语</label>
+                        </div>
+                        
+                        <div class="form-group" id="greetingMessageGroup" style="margin-top: 10px;">
+                            <label class="form-label">问候语内容（每行一条，随机发送）</label>
+                            <textarea class="form-input" id="greetingMessageInput" rows="6" placeholder="请输入问候语内容，每行一条，系统会随机选择发送&#10;例如：&#10;你好，请问这个产品还有货吗？&#10;您好，我想了解一下这个商品的价格&#10;你好，请问这个产品什么时候发货？">你好，请问这个产品还有货吗？
+您好，我想了解一下这个商品的价格
+你好，请问这个产品什么时候发货？
+您好，我想咨询一下这个商品的详细信息
+你好，请问这个产品支持退换货吗？
+您好，我想购买这个商品，有什么优惠吗？
+你好，请问这个产品的质量怎么样？
+您好，我想了解一下这个商品的规格参数</textarea>
+                            <small style="color: var(--text-muted); font-size: 12px; margin-top: 4px; display: block;">
+                                以客户身份发送的问候语，每行输入一条，系统会随机选择其中一条发送。支持多条问候语，让对话更自然。
+                            </small>
+                        </div>
+                        
+                        <div class="form-group" style="margin-top: 10px;">
+                            <label class="form-label">📁 监控文件路径</label>
+                            <div>
+                                <input type="text" class="form-input" id="monitorFilePathInput" 
+                                       placeholder="请输入要监控的文件完整路径，如：C:\Users\用户名\Desktop\links.txt" 
+                                       style="width: 100%;" value="C:\Users\Public\Desktop\links.txt">
+                            </div>
+                            <small style="color: var(--text-muted); font-size: 12px; margin-top: 4px; display: block;">
+                                支持TXT文件，每行一个链接。路径会在所有浏览器中同步保存。
+                            </small>
+                        </div>
+                        
+                        <div class="form-group" style="margin-top: 10px;">
+                            <label class="form-label">检查间隔（秒）</label>
+                            <select class="form-input" id="monitorIntervalSelect">
+                                <option value="3000">3秒</option>
+                                <option value="5000" selected>5秒</option>
+                                <option value="10000">10秒</option>
+                                <option value="30000">30秒</option>
+                                <option value="60000">1分钟</option>
+                            </select>
+                        </div>
+                        
+                        <div class="button-group" style="margin-top: 15px;">
+                            <button class="btn btn-primary" id="startFileMonitorBtn">▶️ 启动监控</button>
+                            <button class="btn btn-danger" id="stopFileMonitorBtn" style="display: none;">⏹️ 停止监控</button>
+                        </div>
+                        
+                        <div class="monitor-status" id="fileMonitorStatus" style="margin-top: 10px; padding: 8px; background: var(--bg-secondary); border-radius: 4px; display: none;">
+                            <span style="color: var(--text-muted); font-size: 12px;">监控状态: </span>
+                            <span id="monitorStatusText" style="color: var(--text-primary); font-weight: 500;">未启动</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-info" id="importFileBtn">📥 导入TXT文件</button>
+                    <button class="btn btn-success" id="exportFileBtn">📤 导出链接列表</button>
+                </div>
+
+            </div>
+
+
+        </div>
+
+        <!-- 批量发送消息标签页 -->
+        <div class="tab-content" id="batch-message-tab">
+            <div class="section">
+                <div class="section-title">💬 批量发送消息</div>
+                
+                <div class="form-group">
+                    <label class="form-label">💬 要发送的消息</label>
+                    <textarea class="form-input form-textarea" id="batchMessageInput" 
+                                                              placeholder="输入要发送给所有链接的消息内容..."></textarea>
+                </div>
+                
+                <!-- 话术模板选择 -->
+                <div class="form-group">
+                    <label class="form-label">📝 话术模板选择</label>
+                    
+                    <!-- 自定义话术输入 -->
+                    <div class="custom-message-input" style="margin-bottom: 15px;">
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <input type="text" class="form-input" id="customMessageInput" 
+                                   placeholder="输入自定义话术..." style="flex: 1;">
+                            <button type="button" class="btn btn-primary btn-sm" id="addCustomMessageBtn">➕ 添加</button>
+                        </div>
+                        <small style="color: var(--text-muted); font-size: 12px; margin-top: 4px; display: block;">输入自定义话术后点击添加按钮</small>
+                    </div>
+                    
+                    <!-- 预设话术下拉框 -->
+                    <div class="quick-message-selector">
+                        <select class="form-select" id="quickMessageSelect">
+                            <option value="">选择预设话术...</option>
+                            <option value="您好，请问有什么可以帮助您的吗？">您好，请问有什么可以帮助您的吗？</option>
+                            <option value="感谢您的咨询，我们会尽快为您处理。">感谢您的咨询，我们会尽快为您处理。</option>
+                            <option value="抱歉让您久等了，请问还有其他问题吗？">抱歉让您久等了，请问还有其他问题吗？</option>
+                            <option value="好的，我明白了，请稍等片刻。">好的，我明白了，请稍等片刻。</option>
+                            <option value="请问还有其他需要帮助的吗？">请问还有其他需要帮助的吗？</option>
+                            <option value="这个商品目前有现货，可以立即发货。">这个商品目前有现货，可以立即发货。</option>
+                            <option value="关于价格问题，我们可以为您提供最优惠的方案。">关于价格问题，我们可以为您提供最优惠的方案。</option>
+                            <option value="发货时间通常在24小时内，我们会及时通知您。">发货时间通常在24小时内，我们会及时通知您。</option>
+                            <option value="是的，我们有多种优惠券可以使用。">是的，我们有多种优惠券可以使用。</option>
+                            <option value="满99元包邮，不满99元需要支付运费。">满99元包邮，不满99元需要支付运费。</option>
+                            <option value="商品质量有保证，支持7天无理由退换。">商品质量有保证，支持7天无理由退换。</option>
+                            <option value="如果您还有其他问题，随时可以咨询我们。">如果您还有其他问题，随时可以咨询我们。</option>
+                            <option value="感谢您的购买，祝您购物愉快！">感谢您的购买，祝您购物愉快！</option>
+                            <option value="我们会为您提供最优质的服务。">我们会为您提供最优质的服务。</option>
+                            <option value="请稍等，我为您查询一下相关信息。">请稍等，我为您查询一下相关信息。</option>
+                        </select>
+                        <button type="button" class="btn btn-primary btn-sm" id="useQuickMessageBtn">使用选中话术</button>
+                    </div>
+                    
+                    <!-- 自定义话术按钮区域 -->
+                    <div id="customMessageButtons" class="custom-message-buttons" style="margin-top: 15px;">
+                        <!-- 自定义话术按钮将在这里动态生成 -->
+                    </div>
+                    
+                    <small style="color: var(--text-muted); font-size: 12px; margin-top: 4px; display: block;">从下拉框选择预设话术，点击使用按钮快速填入消息内容，支持自定义话术</small>
+                    
+                    <!-- 导入导出自定义话术按钮 -->
+                    <div style="margin-top: 15px; display: flex; gap: 10px;">
+                        <button type="button" class="btn btn-outline btn-sm" id="importCustomMessagesBtn">📥 导入话术</button>
+                        <button type="button" class="btn btn-outline btn-sm" id="exportCustomMessagesBtn">📤 导出话术</button>
+                    </div>
+                    <small style="color: var(--text-muted); font-size: 12px; margin-top: 4px; display: block;">支持导入TXT文件中的话术，或导出所有自定义话术到TXT文件</small>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="autoSendToAllLinksCheckbox" checked>
+                    <label for="autoSendToAllLinksCheckbox">自动发送到所有链接</label>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="waitForPageLoadCheckbox" checked>
+                    <label for="waitForPageLoadCheckbox">等待页面加载完成</label>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">⏱️ 发送间隔 (秒)</label>
+                    <input type="number" class="form-input" id="sendIntervalInput" 
+                           value="5" min="2" max="30" step="1">
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-success" id="sendMessageToAllLinksBtn">🚀 发送消息到缓存中的所有链接</button>
+                    <button class="btn btn-warning" id="stopBatchSendBtn" style="display: none;">⏹️ 停止发送</button>
+                </div>
+
+                <div class="info-box">
+                    <h4>📋 批量发送说明</h4>
+                    <ul>
+                        <li>此功能会向浏览器缓存中的所有链接发送相同的消息</li>
+                        <li>缓存中的链接是之前打开过的拼多多商品链接</li>
+                        <li>建议设置合理的发送间隔，避免被限制</li>
+                        <li>发送过程中可以随时停止</li>
+                        <li>每个链接的发送结果会显示在下方</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">📊 发送状态</div>
+                
+                <div class="status-display">
+                    <div class="status-item">
+                        <span class="status-label">发送状态</span>
+                        <span class="status-value" id="batchSendStatus">未开始</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">已发送</span>
+                        <span class="status-value" id="sentCount">0</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">成功</span>
+                        <span class="status-value" id="successCount">0</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">失败</span>
+                        <span class="status-value" id="failCount">0</span>
+                    </div>
+                </div>
+
+                <div id="sendResultsArea" style="max-height: 200px; overflow-y: auto; margin-top: 15px;">
+                    <!-- 发送结果将在这里显示 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 通知配置标签页 -->
+
+
+        <!-- 消息显示区域 -->
+        <div id="messageArea"></div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html> 

@@ -1,0 +1,3 @@
+https://mobile.pinduoduo.com/chat_detail.html?goods_id=123456789&mall_id=987654321
+https://mobile.pinduoduo.com/goods.html?goods_id=111222333
+https://mobile.pinduoduo.com/chat_detail.html?goods_id=444555666&mall_id=777888999
