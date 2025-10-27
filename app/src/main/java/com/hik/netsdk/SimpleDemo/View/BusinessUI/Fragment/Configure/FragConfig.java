@@ -88,8 +88,27 @@ public class FragConfig extends FragBase {
                 if(SDKGuider.g_sdkGuider.m_comDMGuider.getCurrSelectDev() == null)
                 {
                     Toast.makeText(m_mainActivity,"please login first!",Toast.LENGTH_LONG).show();
+                    return;
                 }
-                else
+                
+                // 检查设备是否已登录，如果未登录则自动登录
+                DevManageGuider.DeviceItem deviceInfo = SDKGuider.g_sdkGuider.m_comDMGuider.getCurrSelectDev();
+                if(deviceInfo != null && deviceInfo.m_struDevState.m_iLogState != 1) {
+                    android.util.Log.d("FragConfig", "设备未登录，尝试自动登录");
+                    Toast.makeText(m_mainActivity, "正在登录设备...", Toast.LENGTH_SHORT).show();
+                    
+                    boolean loginSuccess = SDKGuider.g_sdkGuider.m_comDMGuider.login_v40_jna(
+                        deviceInfo.m_szDevName, deviceInfo.m_struNetInfo);
+                    
+                    if(loginSuccess) {
+                        Toast.makeText(m_mainActivity, "设备登录成功", Toast.LENGTH_SHORT).show();
+                    } else {
+                        int errorCode = SDKGuider.g_sdkGuider.GetLastError_jni();
+                        Toast.makeText(m_mainActivity, "设备登录失败，错误代码: " + errorCode, Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                }
+                
                 {
                 switch(flag)
                 {

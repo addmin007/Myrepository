@@ -9,27 +9,31 @@
         <!--args="@null"/>-->
     <fragitem
         className="com.hik.netsdk.SimpleDemo.View.BusinessUI.Fragment.Preview.FragPreview"
-        titile="Preview"
+        titile="主页"
+        args="@null"/>
+    <fragitem
+        className="com.hik.netsdk.SimpleDemo.View.BusinessUI.Fragment.Preview.FragMultiScreenPreview"
+        titile="分屏预览"
         args="@null"/>
     <fragitem
         className="com.hik.netsdk.SimpleDemo.View.BusinessUI.Fragment.PlayBack.FragPlayBack"
-        titile="PlayBack"
+        titile="回放"
         args="@null"/>
     <fragitem
         className="com.hik.netsdk.SimpleDemo.View.BusinessUI.Fragment.Alarm.FragAlarm"
-        titile="Alarm"
+        titile="报警"
         args="@null"/>
     <fragitem
         className="com.hik.netsdk.SimpleDemo.View.BusinessUI.Fragment.Transport.FragTransport"
-        titile="Transport"
+        titile="传输"
         args="@null"/>
     <fragitem
         className="com.hik.netsdk.SimpleDemo.View.BusinessUI.Fragment.Configure.FragConfig"
-        titile="Config"
+        titile="配置"
         args="@null"/>
     <fragitem
         className="com.hik.netsdk.SimpleDemo.View.BusinessUI.Fragment.PassThrough.FragPassThrough"
-        titile="PassThrough"
+        titile="透传"
         args="@null"/>
     <!--<fragitem-->
         <!--className="com.hik.netsdk.SimpleDemo.View.BusinessUI.Fragment.FragTest2.FragTest2"-->

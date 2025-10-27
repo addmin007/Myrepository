@@ -24,7 +24,7 @@
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="4"
-            android:text="Transmit"
+            android:text="转发"
             android:textAllCaps="false"
             android:textSize="15sp" />
 
@@ -38,7 +38,7 @@
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="4"
-            android:text="Intercom"
+            android:text="对讲"
             android:textAllCaps="false"
             android:textSize="15sp" />
 
@@ -52,7 +52,7 @@
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="4"
-            android:text="Stop"
+            android:text="停止"
             android:textAllCaps="false"
             android:textSize="15sp" />
 

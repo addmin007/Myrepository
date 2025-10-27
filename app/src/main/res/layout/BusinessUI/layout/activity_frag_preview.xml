@@ -1,26 +1,324 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:fillViewport="true"
+    android:background="@color/main_bg"
     tools:context=".View.BusinessUI.Fragment.Preview.FragPreview">
 
-    <Button
-        android:id="@+id/button_by_surfaceview"
-        android:layout_marginTop="15dp"
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- 9分屏视频预览区域 -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAllCaps="false"
-        android:text="SurfaceView_Preview" />
+        android:minHeight="300dp"
+        android:layout_margin="4dp"
+        android:orientation="vertical"
+        android:background="@drawable/list_background">
 
+        <!-- 第一行 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/button_by_textview"
+            <FrameLayout
+                android:id="@+id/surface_1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_margin="2dp"
+                android:background="@color/surface_bg">
+                <SurfaceView
+                    android:id="@+id/preview_surface_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+                <TextView
+                    android:id="@+id/device_name_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|start"
+                    android:background="#80000000"
+                    android:textColor="#FFFFFF"
+                    android:textSize="10sp"
+                    android:padding="4dp"
+                    android:text="未配置设备"
+                    android:visibility="visible" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/surface_2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_margin="2dp"
+                android:background="@color/surface_bg">
+                <SurfaceView
+                    android:id="@+id/preview_surface_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+                <TextView
+                    android:id="@+id/device_name_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|start"
+                    android:background="#80000000"
+                    android:textColor="#FFFFFF"
+                    android:textSize="10sp"
+                    android:padding="4dp"
+                    android:text="未配置设备"
+                    android:visibility="visible" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/surface_3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_margin="2dp"
+                android:background="@color/surface_bg">
+                <SurfaceView
+                    android:id="@+id/preview_surface_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+                <TextView
+                    android:id="@+id/device_name_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|start"
+                    android:background="#80000000"
+                    android:textColor="#FFFFFF"
+                    android:textSize="10sp"
+                    android:padding="4dp"
+                    android:text="未配置设备"
+                    android:visibility="visible" />
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <!-- 第二行 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:id="@+id/surface_4"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_margin="2dp"
+                android:background="@color/surface_bg">
+                <SurfaceView
+                    android:id="@+id/preview_surface_4"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+                <TextView
+                    android:id="@+id/device_name_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|start"
+                    android:background="#80000000"
+                    android:textColor="#FFFFFF"
+                    android:textSize="10sp"
+                    android:padding="4dp"
+                    android:text="未配置设备"
+                    android:visibility="visible" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/surface_5"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_margin="2dp"
+                android:background="@color/surface_bg">
+                <SurfaceView
+                    android:id="@+id/preview_surface_5"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+                <TextView
+                    android:id="@+id/device_name_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|start"
+                    android:background="#80000000"
+                    android:textColor="#FFFFFF"
+                    android:textSize="10sp"
+                    android:padding="4dp"
+                    android:text="未配置设备"
+                    android:visibility="visible" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/surface_6"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_margin="2dp"
+                android:background="@color/surface_bg">
+                <SurfaceView
+                    android:id="@+id/preview_surface_6"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+                <TextView
+                    android:id="@+id/device_name_6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|start"
+                    android:background="#80000000"
+                    android:textColor="#FFFFFF"
+                    android:textSize="10sp"
+                    android:padding="4dp"
+                    android:text="未配置设备"
+                    android:visibility="visible" />
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <!-- 第三行 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:id="@+id/surface_7"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_margin="2dp"
+                android:background="@color/surface_bg">
+                <SurfaceView
+                    android:id="@+id/preview_surface_7"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+                <TextView
+                    android:id="@+id/device_name_7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|start"
+                    android:background="#80000000"
+                    android:textColor="#FFFFFF"
+                    android:textSize="10sp"
+                    android:padding="4dp"
+                    android:text="未配置设备"
+                    android:visibility="visible" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/surface_8"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_margin="2dp"
+                android:background="@color/surface_bg">
+                <SurfaceView
+                    android:id="@+id/preview_surface_8"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+                <TextView
+                    android:id="@+id/device_name_8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|start"
+                    android:background="#80000000"
+                    android:textColor="#FFFFFF"
+                    android:textSize="10sp"
+                    android:padding="4dp"
+                    android:text="未配置设备"
+                    android:visibility="visible" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/surface_9"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_margin="2dp"
+                android:background="@color/surface_bg">
+                <SurfaceView
+                    android:id="@+id/preview_surface_9"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+                <TextView
+                    android:id="@+id/device_name_9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|start"
+                    android:background="#80000000"
+                    android:textColor="#FFFFFF"
+                    android:textSize="10sp"
+                    android:padding="4dp"
+                    android:text="未配置设备"
+                    android:visibility="visible" />
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- 底部信息区域 -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAllCaps="false"
-        android:text="TextView_Preview" />
+        android:orientation="vertical"
+        android:layout_margin="4dp"
+        android:background="@drawable/list_background">
+
+        <!-- 作业人员信息 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="作业人员"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:padding="8dp"
+            android:textColor="@color/primary_text" />
+
+        <LinearLayout
+            android:id="@+id/worker_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:weightSum="5" />
+
+        <!-- 气体浓度信息 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="当前气体浓度: "
+                android:textSize="14sp"
+                android:textColor="@color/primary_text"
+                android:layout_marginEnd="8dp" />
+
+            <TextView
+                android:id="@+id/gas_concentration"
+                android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+                android:text="56 PPM"
+                android:textSize="14sp"
+                android:textColor="@color/tech_accent"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </LinearLayout>
+
+</ScrollView>

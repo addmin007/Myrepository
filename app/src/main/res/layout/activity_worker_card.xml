@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minHeight="80dp"
+    android:layout_margin="4dp"
+    android:background="@drawable/list_item_background"
+    android:clickable="true"
+    android:focusable="true">
+
+    <!-- 照片区域 -->
+    <ImageView
+        android:id="@+id/worker_photo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@android:drawable/sym_def_app_icon"
+        android:background="@drawable/circle_background" />
+
+    <!-- 姓名 -->
+    <TextView
+        android:id="@+id/worker_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:background="#80000000"
+        android:textColor="#FFFFFF"
+        android:textSize="10sp"
+        android:text="张三"
+        android:gravity="center"
+        android:padding="4dp" />
+
+</FrameLayout>
+

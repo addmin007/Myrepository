@@ -133,6 +133,11 @@ public class DBDevice {
                 String port = cv.getString(cv.getColumnIndex("port"));
                 String username = cv.getString(cv.getColumnIndex("username"));
                 String password = cv.getString(cv.getColumnIndex("password"));
+                
+                // 处理设备名称为null或空的情况
+                if (devname == null || devname.trim().isEmpty()) {
+                    devname = "设备_" + ip; // 使用IP作为默认设备名称
+                }
                 devItem.m_szDevName = devname;
                 devItem.m_struNetInfo = SDKGuider.g_sdkGuider.m_comDMGuider.new DevNetInfo(ip, port, username, password);
                 alDev.add(devItem);
@@ -156,6 +161,11 @@ public class DBDevice {
             String port = c.getString(c.getColumnIndex("port"));
             String username = c.getString(c.getColumnIndex("username"));
             String password = c.getString(c.getColumnIndex("password"));
+            
+            // 处理设备名称为null或空的情况
+            if (devname == null || devname.trim().isEmpty()) {
+                devname = "设备_" + ip; // 使用IP作为默认设备名称
+            }
             devItem.m_szDevName = devname;
             devItem.m_struNetInfo = SDKGuider.g_sdkGuider.m_comDMGuider.new DevNetInfo(ip, port, username, password);
             close();
@@ -192,6 +202,7 @@ public class DBDevice {
         }
         int ret = db.delete(table_name, "id=?", new String[]{id});//执行删除
         close();
-        return true;
+        // 检查删除是否成功，ret > 0 表示有记录被删除
+        return ret > 0;
     }
 }

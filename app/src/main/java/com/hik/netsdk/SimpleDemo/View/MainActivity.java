@@ -1,10 +1,12 @@
 package com.hik.netsdk.SimpleDemo.View;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -47,18 +49,38 @@ public class MainActivity extends AppCompatActivity
         m_dbDev = DBDevice.getInstance(this);
 
 
-        m_dlDraw = new DrawLayoutProxy(this);
-
-
-        m_fpFrags = new FragmentProxy(this);
-
-
+        // 检查是否已经初始化过，避免重复初始化
+        if (m_dlDraw == null) {
+            m_dlDraw = new DrawLayoutProxy(this);
+        }
+        
+        if (m_fpFrags == null) {
+            m_fpFrags = new FragmentProxy(this);
+        }
     }
 
     @Override
     public void onDestroy()
     {
+        // 清理资源
+        if (m_fpFrags != null) {
+            // 可选：清理FragmentProxy资源
+        }
         super.onDestroy();
+    }
+    
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // 保存状态（虽然使用configChanges，但仍保留此方法作为备份）
+        Log.d("MainActivity", "Saving instance state");
+    }
+    
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        // 恢复状态
+        Log.d("MainActivity", "Restoring instance state");
     }
 
     @Override
@@ -99,5 +121,18 @@ public class MainActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        Log.d("MainActivity", "Orientation changed: " + 
+            (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE ? "LANDSCAPE" : "PORTRAIT"));
+        
+        // 重新设置界面组件，避免组件丢失
+        if (m_fpFrags != null && m_dlDraw != null) {
+            // Fragment和DrawerLayout应该能自动适应屏幕方向
+            Log.d("MainActivity", "Re-initializing UI components after orientation change");
+        }
     }
 }

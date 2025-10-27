@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/white">
+
+    <!-- 标题 -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="作业人员详细信息"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/primary_text"
+        android:gravity="center"
+        android:paddingBottom="16dp" />
+
+    <!-- 照片和基本信息 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingBottom="16dp">
+
+        <ImageView
+            android:id="@+id/detail_photo"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:scaleType="centerCrop"
+            android:src="@android:drawable/sym_def_app_icon"
+            android:layout_marginEnd="16dp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/detail_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="姓名: 张三"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/primary_text"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:id="@+id/detail_age"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="年龄: 28岁"
+                android:textSize="14sp"
+                android:textColor="@color/primary_text" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- 分隔线 -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_marginBottom="16dp" />
+
+    <!-- 生理指标 -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="生理指标"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="@color/primary_text"
+        android:layout_marginBottom="8dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="心率:"
+            android:textSize="14sp"
+            android:textColor="@color/primary_text" />
+
+        <TextView
+            android:id="@+id/detail_heartbeat"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="72 bpm"
+            android:textSize="14sp"
+            android:textColor="@color/tech_accent"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="血氧:"
+            android:textSize="14sp"
+            android:textColor="@color/primary_text" />
+
+        <TextView
+            android:id="@+id/detail_blood_oxygen"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="98%"
+            android:textSize="14sp"
+            android:textColor="@color/tech_accent"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <!-- 关闭按钮 -->
+    <Button
+        android:id="@+id/btn_close"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="关闭"
+        android:textSize="14sp" />
+
+</LinearLayout>
+

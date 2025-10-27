@@ -3,7 +3,6 @@ package com.hik.netsdk.SimpleDemo.View.BusinessUI;
 import android.content.res.XmlResourceParser;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 
 import com.hik.netsdk.SimpleDemo.R;
@@ -20,7 +19,7 @@ import java.util.List;
 
 public class FragmentProxy {
     private TabLayout m_tlFuncTabs;
-    private ViewPager m_vpFuncPage;
+    private NoSwipeViewPager m_vpFuncPage;
     private ArrayList<FragmentItem> m_alFrags;
     private MainActivity m_mainAct;
     List<FragConfig> m_lConfig;
@@ -80,26 +79,35 @@ public class FragmentProxy {
         m_tlFuncTabs = m_mainAct.findViewById(R.id.fag_tabs);
         m_vpFuncPage = m_mainAct.findViewById(R.id.fag_pager);
 
+        // 设置可滚动选项卡模式（横向排列，允许多个选项卡时横向滑动）
+        m_tlFuncTabs.setTabMode(TabLayout.MODE_SCROLLABLE);
+        m_tlFuncTabs.setTabGravity(TabLayout.GRAVITY_FILL);
+
         m_vpFuncPage.setAdapter(new MyFragPagerAdapter(m_mainAct.getSupportFragmentManager(), m_alFrags));
         m_tlFuncTabs.setupWithViewPager(m_vpFuncPage);
 
+        // 禁用ViewPager滑动
+        m_vpFuncPage.setSwipingEnabled(false);
+
         m_vpFuncPage.setOffscreenPageLimit(m_alFrags.size());
-        m_vpFuncPage.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(m_tlFuncTabs));
+        
+        // 自定义页面切换监听，仅通过点击切换
         m_tlFuncTabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                Log.d("TAG", "onTabSelected: ");
-                m_vpFuncPage.setCurrentItem(m_tlFuncTabs.getSelectedTabPosition(), true);
+                Log.d("TAG", "onTabSelected: " + tab.getText());
+                // 通过点击切换页面，不使用动画
+                m_vpFuncPage.setCurrentItem(m_tlFuncTabs.getSelectedTabPosition(), false);
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                Log.d("TAG", "onTabUnselected: ");
+                Log.d("TAG", "onTabUnselected: " + tab.getText());
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                Log.d("TAG", "onTabReselected: ");
+                Log.d("TAG", "onTabReselected: " + tab.getText());
             }
         });
 

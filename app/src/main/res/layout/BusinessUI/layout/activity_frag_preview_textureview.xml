@@ -99,7 +99,7 @@
             android:layout_marginLeft="0dp"
             android:background="@null"
             android:gravity="center"
-            android:text="Channel"
+            android:text="通道"
             android:textSize="15sp" />
 
         <Space
@@ -133,7 +133,7 @@
             android:layout_marginLeft="0dp"
             android:background="@null"
             android:gravity="center"
-            android:text="Stream Type"
+            android:text="码流类型"
             android:textSize="15sp" />
 
         <Space
@@ -173,7 +173,7 @@
             android:layout_marginLeft="0dp"
             android:layout_weight="1"
             android:textAllCaps="false"
-            android:text="Start Preview"
+            android:text="开始预览"
             android:textSize="15sp" />
 
         <Button
@@ -183,7 +183,7 @@
             android:layout_marginLeft="0dp"
             android:layout_weight="1"
             android:textAllCaps="false"
-            android:text="Start Playback"
+            android:text="开始回放"
             android:textSize="15sp" />
     </LinearLayout>
 
@@ -202,7 +202,7 @@
             android:layout_marginLeft="0dp"
             android:layout_weight="1"
             android:textAllCaps="false"
-            android:text="Stop Preview"
+            android:text="停止预览"
             android:textSize="15sp" />
 
         <Button
@@ -212,7 +212,7 @@
             android:layout_marginLeft="0dp"
             android:layout_weight="1"
             android:textAllCaps="false"
-            android:text="Stop Playback"
+            android:text="停止回放"
             android:textSize="15sp" />
     </LinearLayout>
 

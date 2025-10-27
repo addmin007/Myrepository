@@ -19,7 +19,7 @@
             android:textAllCaps="false"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:text="ConfigTest"/>
+            android:text="配置测试"/>
 
 
         <Button
@@ -28,7 +28,7 @@
             android:textAllCaps="false"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:text="PictureTest" />
+            android:text="图像测试" />
 
     </LinearLayout>
 
@@ -45,7 +45,7 @@
         android:textAllCaps="false"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:text="PTZTest"/>
+        android:text="云台测试"/>
 
 
 
@@ -55,7 +55,7 @@
         android:textAllCaps="false"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:text="OtherFunction"/>
+        android:text="其他功能"/>
 
     </LinearLayout>
 
@@ -71,7 +71,7 @@
             android:textAllCaps="false"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:text="ScreenTest"/>
+            android:text="屏幕测试"/>
 
         <Button
             android:id="@+id/ManageTest"
@@ -79,7 +79,7 @@
             android:textAllCaps="false"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:text="ManageTest"/>
+            android:text="管理测试"/>
 
     </LinearLayout>
 

@@ -29,7 +29,7 @@
                 android:layout_width="141dp"
                 android:layout_height="39dp"
                 android:gravity="center_vertical"
-                android:text="SerialPortType"
+                android:text="串口类型"
                 android:textSize="15sp" />
             <RadioGroup
                 android:id="@+id/radio_group_port_type"
@@ -75,7 +75,7 @@
                 android:layout_width="141dp"
                 android:layout_height="39dp"
                 android:gravity="center_vertical"
-                android:text="Channel"
+                android:text="通道"
                 android:textSize="15sp" />
 
             <Spinner
@@ -105,7 +105,7 @@
                 android:layout_height="50dp"
                 android:layout_marginLeft="20dp"
                 android:layout_weight="2"
-                android:text="OpenChannel"
+                android:text="打开通道"
                 android:textAllCaps="false"
                 android:textSize="15sp" />
 
@@ -120,7 +120,7 @@
                 android:layout_height="50dp"
                 android:layout_marginRight="20dp"
                 android:layout_weight="2"
-                android:text="CloseChannel"
+                android:text="关闭通道"
                 android:textAllCaps="false"
                 android:textSize="15sp" />
 
@@ -155,7 +155,7 @@
                 android:layout_width="100dp"
                 android:layout_height="39dp"
                 android:gravity="center_vertical"
-                android:text="Interface"
+                android:text="接口"
                 android:textSize="15sp" />
 
             <Spinner
@@ -202,7 +202,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_weight="1"
-                android:text="Send" />
+                android:text="发送" />
         </LinearLayout>
     </LinearLayout>
         <LinearLayout
@@ -230,21 +230,21 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Time" />
+                    android:text="时间" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Content" />
+                    android:text="内容" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Hex" />
+                    android:text="十六进制" />
 
             </LinearLayout>
             <View

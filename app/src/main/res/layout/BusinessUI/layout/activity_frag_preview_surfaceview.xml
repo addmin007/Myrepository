@@ -21,7 +21,7 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:background="@null"
-            android:text="Channel"
+            android:text="通道"
             android:layout_marginLeft="5dp"
             android:textSize="15sp" />
 
@@ -55,7 +55,7 @@
             android:layout_height="match_parent"
             android:background="@null"
             android:gravity="center_vertical"
-            android:text="Stream Type"
+            android:text="码流类型"
             android:layout_marginLeft="5dp"
             android:textColor="@color/current_time_text"
             android:textSize="15sp" />
@@ -99,7 +99,7 @@
             android:layout_weight="1"
             android:layout_marginLeft="0dp"
             android:textAllCaps="false"
-            android:text="Start"/>
+            android:text="开始"/>
 
         <Button
             android:id="@+id/button_preview_snap"
@@ -109,7 +109,7 @@
             android:layout_weight="1"
             android:layout_marginLeft="0dp"
             android:textAllCaps="false"
-            android:text="Snap" />
+            android:text="抓图" />
 
     </LinearLayout>
 
@@ -129,7 +129,7 @@
             android:layout_marginLeft="0dp"
             android:layout_weight="1"
             android:textAllCaps="false"
-            android:text="Stop"/>
+            android:text="停止"/>
 
         <Button
             android:id="@+id/button_preview_record"
@@ -139,7 +139,7 @@
             android:layout_marginLeft="0dp"
             android:layout_weight="1"
             android:textAllCaps="false"
-            android:text="Record"/>
+            android:text="录像"/>
 
     </LinearLayout>
 

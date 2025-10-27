@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:textSize="15sp"
-        android:text="Time"
+        android:text="时间"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Space
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="20dp"
         android:textSize="15sp"
-        android:text="Content"
+        android:text="内容"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Space
@@ -38,6 +38,6 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="20dp"
         android:textSize="15sp"
-        android:text="Hex"
+        android:text="十六进制"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 </LinearLayout>
