@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Request Transport Data : "
+            android:textColor="#3F51B5"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:layout_marginBottom="5dp"/>
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="?android:attr/listDivider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="40dp"
+            android:paddingRight="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="3dp">
+
+            <TextView
+                android:id="@+id/textView13"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Method:"
+                android:textColor="#3F51B5"
+                android:textSize="14sp" />
+
+            <Spinner
+                android:id="@+id/spinner_send_method"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:entries="@array/MethodOfISAPI" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider3"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
+
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="40dp"
+        android:paddingRight="30dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="3dp">
+
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="99dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="5dp"
+                android:text="URI:"
+                android:textColor="#3F51B5"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/text_input_uri"
+                android:layout_width="213dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="/ISAPI/"
+                android:textSize="14sp" />
+    </LinearLayout>
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
+
+        <EditText
+            android:id="@+id/text_input_transport_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="start|top"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:inputType="textMultiLine"
+            android:minHeight="50dp"
+            android:maxLines="20"
+            android:scrollbars="vertical"
+            android:background="@drawable/multi_text_input_background"
+            android:padding="5dp"
+            android:layout_marginTop="5dp"
+            android:textStyle="italic"
+            android:textColor="@color/date_picker_text_dark"
+            android:textSize="12dp"
+            android:visibility="gone"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="200dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="3dp">
+
+            <Button
+                android:id="@+id/button_text_reset"
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Reset"
+                android:textColor="#3F51B5"
+                android:textStyle="bold"/>
+
+            <Button
+                android:id="@+id/button_transport_data_send"
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Send"
+                android:textColor="#3F51B5"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Response Data :"
+            android:textSize="15sp"
+            android:textColor="#3F51B5"
+            android:textStyle="bold"
+            android:layout_marginBottom="5dp"/>
+
+        <View
+            android:id="@+id/divider5"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="?android:attr/listDivider" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/multi_text_input_background"
+            android:layout_marginTop="5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/text_response_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textColor="@color/date_picker_text_dark"
+                    android:textStyle="italic"
+                    android:text="/*\n******************************\n\t\tNo Response Data\n******************************\n*/"
+                    android:textSize="12dp"
+                    />
+            </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

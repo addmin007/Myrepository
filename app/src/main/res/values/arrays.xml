@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="SendInterface">
+        <item>SendToSerialPort(Transparent)</item>
+        <item>SendToSerialPort(Direct)</item>
+        <item>SendTo232Port(Direct)</item>
+    </string-array>
+    <string-array name="MethodOfISAPI">
+        <item>GET</item>
+        <item>POST</item>
+        <item>PUT</item>
+        <item>DELETE</item>
+    </string-array>
+</resources>

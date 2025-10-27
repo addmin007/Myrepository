@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".View.BusinessUI.Fragment.PlayBack.FragPlayBackByTime">
+    <LinearLayout
+        android:id="@+id/ll_bytime_start_time"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/main_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="5dp"
+            android:text="@string/begin_date"
+            android:textColor="@color/current_time_text"
+            android:textSize="15sp" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/tv_bytime_selected_date"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:textColor="@color/content_text"
+            android:layout_marginRight="5dp"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_bytime_end_time"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/current_time_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:text="@string/end_data"
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/current_time_text"
+            android:textSize="15sp" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/tv_bytime_selected_time"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:textColor="@color/content_text"
+            android:layout_marginRight="5dp"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_bytime_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/main_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:text="@string/select_channel"
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/current_time_text"
+            android:textSize="15sp" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Spinner
+            android:id="@+id/bytime_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:textColor="@color/content_text"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_stream_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/current_time_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:text="@string/select_stream"
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/current_time_text"
+            android:textSize="15sp" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Spinner
+            android:id="@+id/stream_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:textColor="@color/content_text"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+
+    <SurfaceView
+        android:id="@+id/Sur_bytime_Player"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/select_title_text" />
+
+    <android.support.v7.widget.AppCompatSeekBar
+        android:id = "@+id/seekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/Current_Progress"
+        android:layout_marginRight="5dp"
+        android:gravity="center_vertical" />
+
+    <LinearLayout
+        android:id="@+id/ll_bytime_play"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/main_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_bytime_play"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="50dp"
+            android:textSize="15sp"
+            android:textAllCaps="false"
+            android:layout_marginLeft="25dp"
+            android:text="@string/Forward_playback"/>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/button_bytime_reverse"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="50dp"
+            android:textSize="15sp"
+            android:textAllCaps="false"
+            android:layout_marginRight="25dp"
+            android:text="@string/Reverse_playback"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_bytime_other"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/main_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_bytime_stop"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="50dp"
+            android:textSize="15sp"
+            android:textAllCaps="false"
+            android:layout_marginLeft="25dp"
+            android:text="@string/Stop_playback"/>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/button_bytime_download"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="50dp"
+            android:textSize="15sp"
+            android:textAllCaps="false"
+            android:layout_marginRight="25dp"
+            android:text="@string/Download_file"/>
+
+    </LinearLayout>
+
+</LinearLayout>

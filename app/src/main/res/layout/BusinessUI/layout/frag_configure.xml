@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".Configure">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/ConfigTest"
+            android:layout_weight="2"
+            android:textAllCaps="false"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="ConfigTest"/>
+
+
+        <Button
+            android:id="@+id/PictureTest"
+            android:layout_weight="2"
+            android:textAllCaps="false"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="PictureTest" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+    <Button
+        android:id="@+id/PTZTest"
+        android:layout_weight="2"
+        android:textAllCaps="false"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:text="PTZTest"/>
+
+
+
+    <Button
+        android:id="@+id/OtherFunction"
+        android:layout_weight="2"
+        android:textAllCaps="false"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:text="OtherFunction"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/ScreenTest"
+            android:layout_weight="2"
+            android:textAllCaps="false"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="ScreenTest"/>
+
+        <Button
+            android:id="@+id/ManageTest"
+            android:layout_weight="2"
+            android:textAllCaps="false"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="ManageTest"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+    <ListView
+        android:id="@+id/list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></ListView>
+
+   </LinearLayout>
+
+</LinearLayout>

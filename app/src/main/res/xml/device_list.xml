@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<device_list xmlns:android="http://schemas.android.com/apk/res/android">
+    <device
+        name="10.21.84.249"
+        ip = "10.21.84.249"
+        port = "8000"
+        user = "admin"
+        password = "hik123456" />
+    <device
+        name="192.168.1.154"
+        ip = "192.168.1.154"
+        port = "8000"
+        user = "admin"
+        password = "hik123456" />
+    <device
+        name="10.21.84.241"
+        ip = "10.21.84.241"
+        port = "8000"
+        user = "admin"
+        password = "hik12345" />
+    <device
+        name="ACS"
+        ip = "172.7.16.58"
+        port = "8000"
+        user = "admin"
+        password = "123456.." />
+    <device
+        name="rcx"
+        ip = "10.21.101.26"
+        port = "8000"
+        user = "rcx"
+        password = "abcd1234" />
+    <device
+        name="ACS2"
+        ip = "172.7.17.19"
+        port = "8000"
+        user = "admin"
+        password = "sdk123456" />
+    <device
+        name="172.7.17.57"
+        ip = "172.7.17.57"
+        port = "8000"
+        user = "admin"
+        password = "a1111111" />
+</device_list>

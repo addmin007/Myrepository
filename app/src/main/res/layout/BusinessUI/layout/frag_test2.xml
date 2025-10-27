@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".View.BusinessUI.Fragment.Preview.FragPreview">
+
+
+
+    <LinearLayout
+        android:id="@+id/ll_bytime_start_time"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/current_time_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="110dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="0dp"
+            android:background="@null"
+            android:gravity="center"
+            android:text="@string/begin_date"
+            android:textColor="@color/current_time_text"
+            android:textSize="15sp" />
+
+        <!--<TextView-->
+            <!--android:id="@+id/tv_bytime_selected_date"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+
+            <!--android:background="@null"-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:textColor="@color/content_text"-->
+            <!--android:layout_marginRight="5dp"-->
+            <!--android:textSize="15sp" />-->
+        <EditText
+            android:id="@+id/Starttime_EditText"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:ems="10"
+            android:inputType="time" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_bytime_end_time"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/current_time_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="110dp"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:gravity="center"
+            android:text="@string/end_data"
+            android:layout_marginLeft="0dp"
+            android:textColor="@color/current_time_text"
+            android:textSize="15sp" />
+
+
+        <!--<TextView-->
+            <!--android:id="@+id/tv_bytime_selected_time"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:background="@null"-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:textColor="@color/content_text"-->
+            <!--android:layout_marginRight="5dp"-->
+            <!--android:textSize="15sp" />-->
+        <EditText
+            android:id="@+id/Endtime_EditText"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:ems="10"
+            android:inputType="time" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_bychan_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/main_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_get_channel"
+            android:layout_width="110dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="0dp"
+            android:background="@null"
+            android:gravity="center"
+            android:text="Channel"
+            android:textSize="15sp" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Spinner
+            android:id="@+id/bychan_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:textColor="@color/content_text"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_stream_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/main_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_get_stream"
+            android:layout_width="110dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="0dp"
+            android:background="@null"
+            android:gravity="center"
+            android:text="Stream Type"
+            android:textSize="15sp" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Spinner
+            android:id="@+id/stream_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:textColor="@color/content_text"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+
+    <TextureView
+        android:id="@+id/textureView2"
+        android:layout_width="match_parent"
+        android:layout_height="200dp" />
+
+    <LinearLayout
+        android:id="@+id/preview_play"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/main_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+        android:id="@+id/button_preview_start"
+        android:layout_width="163dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="0dp"
+        android:layout_weight="0.44"
+        android:text="Start Preview"
+        android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/button_playback_start"
+            android:layout_width="163dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="0dp"
+            android:layout_weight="0.44"
+            android:text="Start Playback"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_bytime_other"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/main_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_preview_stop"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="0dp"
+            android:layout_weight="1"
+            android:text="Stop Preview"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/button_playback_stop"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="0dp"
+            android:layout_weight="1"
+            android:text="Stop Playback"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+
+
+</LinearLayout>

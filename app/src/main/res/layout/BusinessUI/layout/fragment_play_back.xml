@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical"
+tools:context=".View.BusinessUI.Fragment.PlayBack.FragPlayBack">
+
+<Button
+    android:id="@+id/button_by_time"
+    android:layout_marginTop="15dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textAllCaps="false"
+    android:text="@string/PlayBack_By_Time" />
+
+<Button
+    android:id="@+id/button_by_file"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textAllCaps="false"
+    android:text="@string/PlayBack_By_File" />
+
+</LinearLayout>

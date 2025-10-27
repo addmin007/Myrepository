@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_bg"
+    android:orientation="vertical"
+    tools:ignore="RtlSymmetry">
+    tools:context=".View.BusinessUI.Fragment.PlayBack.FragPlayBackByFile">
+
+    <LinearLayout
+        android:id="@+id/ll_start_time"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/main_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="5dp"
+            android:text="@string/begin_date"
+            android:textColor="@color/current_time_text"
+            android:textSize="15sp" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/tv_selected_date"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:textColor="@color/content_text"
+            android:layout_marginRight="5dp"
+            android:text="1990-11-22-11:11:11"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_end_time"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/current_time_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:text="@string/end_data"
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/current_time_text"
+            android:textSize="15sp" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/tv_selected_time"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:textColor="@color/content_text"
+            android:layout_marginRight="5dp"
+            android:text="1990-11-22-11:11:11"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/main_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:text="@string/select_channel"
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/current_time_text"
+            android:textSize="15sp" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:textColor="@color/content_text"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/button_search"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:textAllCaps="false"
+        android:textSize="15sp"
+        android:text="@string/File_search"/>
+
+    <ListView
+        android:id="@+id/list_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15sp">
+    </ListView>
+
+</LinearLayout>

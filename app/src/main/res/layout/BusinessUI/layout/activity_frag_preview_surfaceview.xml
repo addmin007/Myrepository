@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".View.BusinessUI.Fragment.Preview.FragPreviewBySurfaceView">
+
+    <LinearLayout
+        android:id="@+id/ll_bychan_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/main_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/button_get_channel"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:background="@null"
+            android:text="Channel"
+            android:layout_marginLeft="5dp"
+            android:textSize="15sp" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Spinner
+            android:id="@+id/bychan_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:textColor="@color/content_text"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_stream_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/current_time_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/button_get_stream"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:text="Stream Type"
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/current_time_text"
+            android:textSize="15sp" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Spinner
+            android:id="@+id/stream_spinner_surface"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:textColor="@color/content_text"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+
+    <SurfaceView
+        android:id="@+id/Surface_Preview_Play"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/select_title_text" />
+
+    <LinearLayout
+        android:id="@+id/preview_play"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/main_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_preview_start"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:textSize="15sp"
+            android:layout_weight="1"
+            android:layout_marginLeft="0dp"
+            android:textAllCaps="false"
+            android:text="Start"/>
+
+        <Button
+            android:id="@+id/button_preview_snap"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:textSize="15sp"
+            android:layout_weight="1"
+            android:layout_marginLeft="0dp"
+            android:textAllCaps="false"
+            android:text="Snap" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_bytime_other"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/main_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_preview_stop"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:textSize="15sp"
+            android:layout_marginLeft="0dp"
+            android:layout_weight="1"
+            android:textAllCaps="false"
+            android:text="Stop"/>
+
+        <Button
+            android:id="@+id/button_preview_record"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:textSize="15sp"
+            android:layout_marginLeft="0dp"
+            android:layout_weight="1"
+            android:textAllCaps="false"
+            android:text="Record"/>
+
+    </LinearLayout>
+
+</LinearLayout>
