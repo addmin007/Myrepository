@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -21,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hcnetsdk.jna.HCNetSDKJNAInstance;
 import com.hik.netsdk.SimpleDemo.Control.DevManageGuider;
 import com.hik.netsdk.SimpleDemo.Control.SDKGuider;
 import com.hik.netsdk.SimpleDemo.Model.DBDevice;
@@ -29,6 +31,7 @@ import com.hik.netsdk.SimpleDemo.View.BusinessUI.Fragment.FragBase;
 import com.hik.netsdk.SimpleDemo.View.MainActivity;
 import com.hikvision.netsdk.HCNetSDK;
 import com.hikvision.netsdk.NET_DVR_PREVIEWINFO;
+import com.hikvision.netsdk.PTZCommand;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +53,14 @@ public class FragPreview extends FragBase implements SurfaceHolder.Callback {
     
     // 摄像机控制按钮
     private Button mBtnRefreshCamera;
-    private Button mBtnFullscreen;
+    
+    // 云台控制按钮
+    private Button mBtnPtzUp;
+    private Button mBtnPtzDown;
+    private Button mBtnPtzLeft;
+    private Button mBtnPtzRight;
+    private Button mBtnZoomIn;
+    private Button mBtnZoomOut;
     
     // 气体浓度
     private TextView mGasConcentrationView;
@@ -113,6 +123,9 @@ public class FragPreview extends FragBase implements SurfaceHolder.Callback {
         // 初始化单台摄像机组件
         initSingleCameraViews(rootView);
         
+        // 初始化云台控制按钮
+        initPtzControls(rootView);
+        
         // 初始化气体浓度显示
         mGasConcentrationView = rootView.findViewById(R.id.gas_concentration);
         updateGasConcentration();
@@ -148,8 +161,6 @@ public class FragPreview extends FragBase implements SurfaceHolder.Callback {
         
         // 摄像机控制按钮
         mBtnRefreshCamera = rootView.findViewById(R.id.btn_refresh_camera);
-        mBtnFullscreen = rootView.findViewById(R.id.btn_fullscreen);
-        
         // 设置SurfaceHolder回调
         if (mSurfaceSingle != null) {
             mSurfaceSingle.getHolder().addCallback(this);
@@ -161,10 +172,151 @@ public class FragPreview extends FragBase implements SurfaceHolder.Callback {
         if (mBtnRefreshCamera != null) {
             mBtnRefreshCamera.setOnClickListener(v -> refreshCamera());
         }
+    }
+
+    // 初始化云台控制按钮
+    private void initPtzControls(View rootView) {
+        mBtnPtzUp = rootView.findViewById(R.id.btn_ptz_up);
+        mBtnPtzDown = rootView.findViewById(R.id.btn_ptz_down);
+        mBtnPtzLeft = rootView.findViewById(R.id.btn_ptz_left);
+        mBtnPtzRight = rootView.findViewById(R.id.btn_ptz_right);
+        mBtnZoomIn = rootView.findViewById(R.id.btn_zoom_in);
+        mBtnZoomOut = rootView.findViewById(R.id.btn_zoom_out);
         
-        if (mBtnFullscreen != null) {
-            mBtnFullscreen.setOnClickListener(v -> toggleFullscreen());
+        // 设置云台控制按钮的触摸事件
+        if (mBtnPtzUp != null) {
+            mBtnPtzUp.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        ptzControl(PTZCommand.TILT_UP, 0, 4); // TILT_UP 开始
+                    } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                        ptzControl(PTZCommand.TILT_UP, 1, 4); // TILT_UP 停止
+                    }
+                    return true;
+                }
+            });
         }
+        
+        if (mBtnPtzDown != null) {
+            mBtnPtzDown.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        ptzControl(PTZCommand.TILT_DOWN, 0, 4); // TILT_DOWN 开始
+                    } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                        ptzControl(PTZCommand.TILT_DOWN, 1, 4); // TILT_DOWN 停止
+                    }
+                    return true;
+                }
+            });
+        }
+        
+        if (mBtnPtzLeft != null) {
+            mBtnPtzLeft.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        ptzControl(PTZCommand.PAN_LEFT, 0, 4); // PAN_LEFT 开始
+                    } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                        ptzControl(PTZCommand.PAN_LEFT, 1, 4); // PAN_LEFT 停止
+                    }
+                    return true;
+                }
+            });
+        }
+        
+        if (mBtnPtzRight != null) {
+            mBtnPtzRight.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        ptzControl(PTZCommand.PAN_RIGHT, 0, 4); // PAN_RIGHT 开始
+                    } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                        ptzControl(PTZCommand.PAN_RIGHT, 1, 4); // PAN_RIGHT 停止
+                    }
+                    return true;
+                }
+            });
+        }
+        
+        if (mBtnZoomIn != null) {
+            mBtnZoomIn.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        ptzControl(PTZCommand.ZOOM_IN, 0, 4); // ZOOM_IN 开始
+                    } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                        ptzControl(PTZCommand.ZOOM_IN, 1, 4); // ZOOM_IN 停止
+                    }
+                    return true;
+                }
+            });
+        }
+        
+        if (mBtnZoomOut != null) {
+            mBtnZoomOut.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        ptzControl(PTZCommand.ZOOM_OUT, 0, 4); // ZOOM_OUT 开始
+                    } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                        ptzControl(PTZCommand.ZOOM_OUT, 1, 4); // ZOOM_OUT 停止
+                    }
+                    return true;
+                }
+            });
+        }
+    }
+    
+    // 云台控制方法
+    private void ptzControl(final int command, final int stop, final int speed) {
+        if (mAutoConnectedDevice == null || mAutoConnectedDevice.m_lUserID == -1) {
+            android.util.Log.w("FragPreview", "设备未连接，无法控制云台");
+            showToast("请先连接设备");
+            return;
+        }
+        
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    boolean result = false;
+                    
+                    // 优先使用预览句柄方式控制云台
+                    if (mPreviewHandle != -1) {
+                        result = HCNetSDK.getInstance().NET_DVR_PTZControlWithSpeed(
+                            mPreviewHandle, 
+                            command, 
+                            stop, 
+                            speed
+                        );
+                        android.util.Log.d("FragPreview", "使用预览句柄控制云台: handle=" + mPreviewHandle + ", command=" + command);
+                    }
+                    
+                    // 如果预览句柄方式失败，尝试使用用户ID方式
+                    if (!result) {
+                        result = HCNetSDKJNAInstance.getInstance().NET_DVR_PTZControlWithSpeed_Other(
+                            mAutoConnectedDevice.m_lUserID, 
+                            1, // 通道号
+                            command, 
+                            stop, 
+                            speed
+                        );
+                        android.util.Log.d("FragPreview", "使用用户ID控制云台: userID=" + mAutoConnectedDevice.m_lUserID + ", command=" + command);
+                    }
+                    
+                    if (result) {
+                        android.util.Log.d("FragPreview", "云台控制成功: command=" + command + ", stop=" + stop);
+                    } else {
+                        int errorCode = SDKGuider.g_sdkGuider.GetLastError_jni();
+                        android.util.Log.e("FragPreview", "云台控制失败: command=" + command + ", error=" + errorCode);
+                    }
+                } catch (Exception e) {
+                    android.util.Log.e("FragPreview", "云台控制异常", e);
+                }
+            }
+        }).start();
     }
 
     private void loadDevicesAndStartPreview() {
@@ -317,13 +469,13 @@ public class FragPreview extends FragBase implements SurfaceHolder.Callback {
                             ", 端口: " + firstDevice.m_struNetInfo.m_szPort + 
                             ", 用户名: " + firstDevice.m_struNetInfo.m_szUserName);
                         
-                        boolean loginSuccess = SDKGuider.g_sdkGuider.m_comDMGuider.login_v40_jna(
+                    boolean loginSuccess = SDKGuider.g_sdkGuider.m_comDMGuider.login_v40_jna(
                             firstDevice.m_szDevName, firstDevice.m_struNetInfo);
                         
                         android.util.Log.d("FragPreview", "设备 " + deviceName + " 登录结果: " + loginSuccess);
-                        
+                    
                         // 如果登录成功，从DevManageGuider获取UserID
-                        if (loginSuccess) {
+                    if (loginSuccess) {
                             // 从设备列表中查找刚登录的设备（通过IP匹配）
                             ArrayList<DevManageGuider.DeviceItem> deviceList = SDKGuider.g_sdkGuider.m_comDMGuider.getDevList();
                             DevManageGuider.DeviceItem loggedInDevice = null;
@@ -463,7 +615,7 @@ public class FragPreview extends FragBase implements SurfaceHolder.Callback {
             }
         }).start();
     }
-    
+
     // 更新连接状态显示
     private void updateConnectionStatus(String status, boolean isConnected) {
         if (mDeviceNameView != null) {
@@ -547,6 +699,8 @@ public class FragPreview extends FragBase implements SurfaceHolder.Callback {
         if (handle != -1) {
             mPreviewHandle = handle;
             android.util.Log.d("FragPreview", "单台摄像机预览成功，句柄: " + handle);
+            
+            android.util.Log.d("FragPreview", "单台摄像机预览成功");
             updateConnectionStatus("预览中", true);
         } else {
             int errorCode = SDKGuider.g_sdkGuider.GetLastError_jni();
@@ -563,6 +717,7 @@ public class FragPreview extends FragBase implements SurfaceHolder.Callback {
             android.util.Log.d("FragPreview", "单台摄像机预览已停止");
         }
     }
+    
     
     // 强制连接设备
     private void forceConnectDevice() {
@@ -614,20 +769,6 @@ public class FragPreview extends FragBase implements SurfaceHolder.Callback {
         }
     }
     
-    // 切换全屏模式
-    private void toggleFullscreen() {
-        if (getActivity() != null) {
-            // 隐藏状态栏和导航栏实现全屏
-            View decorView = getActivity().getWindow().getDecorView();
-            int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-            decorView.setSystemUiVisibility(uiOptions);
-            
-            android.util.Log.d("FragPreview", "已切换到全屏模式");
-        }
-    }
-
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         holder.setFormat(PixelFormat.OPAQUE);
@@ -755,6 +896,13 @@ public class FragPreview extends FragBase implements SurfaceHolder.Callback {
                         REQUEST_CODE_ASK_PERMISSIONS);
                 return;
             }
+        }
+    }
+    
+    // 安全的Toast显示方法
+    private void showToast(String message) {
+        if (getActivity() != null && !getActivity().isFinishing() && !getActivity().isDestroyed()) {
+            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
         }
     }
 }

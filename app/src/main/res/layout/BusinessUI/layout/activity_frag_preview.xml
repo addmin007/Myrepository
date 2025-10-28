@@ -79,22 +79,127 @@
                 android:layout_height="wrap_content"
                 android:text="刷新"
                 android:textSize="12sp"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/tech_button_background"
-                android:textColor="@color/tab_active_text" />
-
-            <Button
-                android:id="@+id/btn_fullscreen"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="全屏"
-                android:textSize="12sp"
                 android:background="@drawable/tech_button_background"
                 android:textColor="@color/tab_active_text" />
 
         </LinearLayout>
 
     </FrameLayout>
+
+    <!-- 云台控制区域 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="4dp"
+        android:background="@drawable/list_background"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="云台控制"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:padding="8dp"
+            android:textColor="@color/primary_text"
+            android:gravity="center" />
+
+        <!-- 云台控制按钮组 -->
+        <RelativeLayout
+            android:layout_width="220dp"
+            android:layout_height="220dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp">
+
+            <!-- 中心圆 -->
+            <View
+                android:id="@+id/ptz_center"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/tech_button_background" />
+
+            <!-- 上 -->
+            <Button
+                android:id="@+id/btn_ptz_up"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_above="@id/ptz_center"
+                android:layout_centerHorizontal="true"
+                android:text="▲"
+                android:textSize="24sp"
+                android:textColor="@color/tab_active_text"
+                android:background="@drawable/tech_button_background" />
+
+            <!-- 下 -->
+            <Button
+                android:id="@+id/btn_ptz_down"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_below="@id/ptz_center"
+                android:layout_centerHorizontal="true"
+                android:text="▼"
+                android:textSize="24sp"
+                android:textColor="@color/tab_active_text"
+                android:background="@drawable/tech_button_background" />
+
+            <!-- 左 -->
+            <Button
+                android:id="@+id/btn_ptz_left"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_toLeftOf="@id/ptz_center"
+                android:layout_centerVertical="true"
+                android:text="◀"
+                android:textSize="24sp"
+                android:textColor="@color/tab_active_text"
+                android:background="@drawable/tech_button_background" />
+
+            <!-- 右 -->
+            <Button
+                android:id="@+id/btn_ptz_right"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_toRightOf="@id/ptz_center"
+                android:layout_centerVertical="true"
+                android:text="▶"
+                android:textSize="24sp"
+                android:textColor="@color/tab_active_text"
+                android:background="@drawable/tech_button_background" />
+
+        </RelativeLayout>
+
+        <!-- 变焦控制 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="16dp">
+
+            <Button
+                android:id="@+id/btn_zoom_in"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="放大 +"
+                android:textSize="14sp"
+                android:textColor="@color/tab_active_text"
+                android:background="@drawable/tech_button_background"
+                android:layout_marginEnd="16dp" />
+
+            <Button
+                android:id="@+id/btn_zoom_out"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="缩小 -"
+                android:textSize="14sp"
+                android:textColor="@color/tab_active_text"
+                android:background="@drawable/tech_button_background" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
     <!-- 底部信息区域 -->
     <LinearLayout
