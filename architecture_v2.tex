@@ -1,0 +1,270 @@
+\documentclass[tikz, border=20pt]{standalone}
+\usepackage{ctex}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, fit, backgrounds, positioning, shapes.geometric}
+
+% ---- Color Palette ----
+\definecolor{col0}{HTML}{ECEFF1}  % input bg
+\definecolor{col1}{HTML}{E3F2FD}  % blue light
+\definecolor{col1b}{HTML}{1565C0} % blue dark
+\definecolor{col2}{HTML}{E8F5E9}  % green light
+\definecolor{col2b}{HTML}{2E7D32} % green dark
+\definecolor{col3}{HTML}{FFF3E0}  % orange light
+\definecolor{col3b}{HTML}{E65100} % orange dark
+\definecolor{col4}{HTML}{F3E5F5}  % purple light
+\definecolor{col4b}{HTML}{6A1B9A} % purple dark
+\definecolor{col5}{HTML}{FCE4EC}  % red light
+\definecolor{col5b}{HTML}{B71C1C} % red dark
+\definecolor{colout}{HTML}{FFFDE7}% output bg
+\definecolor{colgray}{HTML}{607D8B}
+
+\begin{document}
+\begin{tikzpicture}[
+  % --- Base styles ---
+  every node/.style={font=\small},
+  % rounded box
+  rbox/.style={
+    draw, rounded corners=4pt, line width=0.9pt,
+    align=center, inner sep=6pt
+  },
+  % section header badge
+  badge/.style={
+    draw, rounded corners=3pt, line width=1pt,
+    align=center, inner sep=5pt, font=\small\bfseries,
+    text=white, fill=#1
+  },
+  % small inner node
+  inode/.style={
+    draw=#1!60!black, fill=#1!15, rounded corners=3pt,
+    line width=0.7pt, align=center, inner sep=5pt,
+    font=\footnotesize
+  },
+  % arrow
+  arr/.style={-{Stealth[length=5pt]}, line width=1pt, draw=colgray},
+  darr/.style={-{Stealth[length=5pt]}, line width=0.8pt,
+               draw=colgray, dashed},
+]
+
+% =======================================================
+%  TITLE
+% =======================================================
+\node[font=\Large\bfseries] (title) at (0, 0) {Uni-MOF 模型架构图};
+
+% =======================================================
+%  SECTION 0 : INPUTS
+% =======================================================
+\node[rbox, fill=col0, minimum width=13cm, minimum height=2.2cm]
+  (sec0) at (0, -1.8) {};
+
+\node[badge=colgray] (lbl0) at (-5.5, -1.0) {输入};
+
+\node[inode=col1b, minimum width=3.2cm]
+  (in_mof) at (-3.5, -1.8) {MOF 结构 (CIF)\\原子坐标 + 晶胞拓扑};
+
+\node[inode=col1b, minimum width=3.2cm]
+  (in_gas) at (0,    -1.8) {气体信息\\Gas ID + 物理属性};
+
+\node[inode=col1b, minimum width=3.2cm]
+  (in_env) at (3.5,  -1.8) {环境条件\\压力 P + 温度 T};
+
+% =======================================================
+%  SECTION 1 : PREPROCESSING
+% =======================================================
+\node[rbox, fill=col0, minimum width=13cm, minimum height=2.5cm]
+  (sec1) at (0, -4.4) {};
+
+\node[badge=colgray] (lbl1) at (-5.5, -3.4) {预处理};
+
+\node[inode=colgray, minimum width=12cm]
+  (prep) at (0, -4.6)
+  {8 步 Pipeline:\\[4pt]
+   RemoveH $\;\to\;$ Crop(512 atoms) $\;\to\;$ Normalize $\;\to\;$ Tokenize\\
+   $\to\;$ Distance $\;\to\;$ EdgeType $\;\to\;$ Prepend {[}CLS{]} $\;\to\;$ Pad};
+
+% =======================================================
+%  SECTION 2 : UniMatModel (Backbone)
+% =======================================================
+\node[rbox, fill=col1, minimum width=13cm, minimum height=6.8cm]
+  (sec2) at (0, -8.8) {};
+
+\node[badge=col1b, minimum width=10cm] (lbl2) at (0, -5.6)
+  {Layer 1 \;|\; UniMatModel (Backbone) \;|\; 26.7M params};
+
+% --- Embedding ---
+\node[inode=col1b, minimum width=5cm]
+  (emb) at (0, -6.4)
+  {嵌入层\\[4pt]
+   AtomEmbedding $\to$ 512 维 \quad
+   GaussianLayer: dist $\to$ 128 $\to$ distance bias};
+
+% --- Transformer block ---
+\node[rbox, draw=col1b!60, fill=white,
+      minimum width=11cm, minimum height=4.5cm]
+  (tf) at (0, -9.5) {};
+
+\node[font=\footnotesize\bfseries\color{col1b}] at (0, -7.5)
+  {Transformer Encoder $\times 8$ 层};
+
+\node[inode=col1b, minimum width=3.5cm]
+  (ln1)  at (-3.5, -8.1) {LayerNorm};
+\node[inode=col1b, minimum width=3.5cm]
+  (mhsa) at (-3.5, -9.0) {Multi-Head Self-Attention\\64 heads, dim=512};
+\node[inode=col1b, minimum width=3.5cm]
+  (proj) at (-3.5, -9.9) {in\_proj: 512$\to$1536\\out\_proj: 1536$\to$512};
+
+\node[inode=col1b, minimum width=3.5cm]
+  (ln2)  at ( 2.5, -8.1) {LayerNorm};
+\node[inode=col1b, minimum width=3.5cm]
+  (ffn)  at ( 2.5, -9.0) {FFN\\512 $\to$ 2048 $\to$ 512};
+\node[inode=col1b, minimum width=3.5cm]
+  (res)  at ( 2.5, -9.9) {残差连接 + Dropout};
+
+% dist bias label
+\node[font=\scriptsize\color{col1b}, align=center]
+  (dbias) at (-3.5,-10.8) {distance bias\\(GaussianLayer)};
+
+% arrows inside transformer
+\draw[arr] (ln1) -- (mhsa);
+\draw[arr] (mhsa) -- (proj);
+\draw[arr] (dbias.north) -- (mhsa.south);
+\draw[arr] (ln2) -- (ffn);
+\draw[arr] (ffn) -- (res);
+% left-right connection
+\draw[arr] (proj.east) -- ++(0.4,0) |- (ln2.west);
+
+% repeat brace
+\node[font=\scriptsize\color{col1b}] at (0,-11.3) {(每层含两组残差)};
+
+% --- encoder output ---
+\node[inode=col1b, minimum width=5cm]
+  (enc_out) at (0, -12.3)
+  {encoder\_rep: $[\,B,\,L,\,512\,]$\\取 [CLS] token $\;\to\;[\,B,\,512\,]$};
+
+% =======================================================
+%  SECTION 3 : UniMOFV2Model  (Multimodal Fusion)
+% =======================================================
+\node[rbox, fill=col2, minimum width=13cm, minimum height=5.5cm]
+  (sec3) at (0, -16.2) {};
+
+\node[badge=col2b, minimum width=10cm] (lbl3) at (0, -13.6)
+  {Layer 2 \;|\; UniMOFV2Model (多模态融合) \;|\; 27.4M params};
+
+% four feature branches
+\node[inode=col2b, minimum width=2.4cm]
+  (f_mof)  at (-5.0, -14.8)
+  {MOF\\特征\\$[\,B,512\,]$};
+
+\node[inode=col2b, minimum width=2.8cm]
+  (f_gas)  at (-1.6, -14.8)
+  {GasModel\\GasID $\to$ 128\\Attr $\to$ 128\\$\to$ \textbf{256}};
+
+\node[inode=col2b, minimum width=2.8cm]
+  (f_env)  at ( 2.0, -14.8)
+  {EnvModel\\P Emb $\to$ 128\\T Emb $\to$ 128\\$\to$ \textbf{384}};
+
+\node[inode=col2b, minimum width=2.8cm]
+  (f_str)  at ( 5.3, -14.8)
+  {StructureModel\\Void Frac, SA, LCD\\Linear $\to$ \textbf{128}};
+
+% concat
+\node[inode=col2b, minimum width=11cm]
+  (cat) at (0, -16.3)
+  {Concat $[\,512 + 256 + 384 + 128\,]$ $\;\to\;$ $[\,B,\;\mathbf{1280}\,]$};
+
+% arrows into concat
+\draw[arr] (f_mof.south)  |- (cat.west);
+\draw[arr] (f_gas.south)  -- (cat.north);
+\draw[arr] (f_env.south)  -- (cat.north);
+\draw[arr] (f_str.south)  |- (cat.east);
+
+% =======================================================
+%  SECTION 4 : Regression Head
+% =======================================================
+\node[rbox, fill=col3, minimum width=13cm, minimum height=2.5cm]
+  (sec4) at (0, -19.1) {};
+
+\node[badge=col3b] (lbl4) at (-4.5, -18.3) {回归头};
+
+\node[inode=col3b, minimum width=3.8cm]
+  (h1) at (-2.0, -19.1) {Linear: 1280 $\to$ 512\\GELU Activation};
+
+\node[inode=col3b, minimum width=3.8cm]
+  (h2) at ( 2.8, -19.1) {Linear: 512 $\to$ \textbf{1}\\(吸附量预测值)};
+
+\draw[arr] (h1) -- (h2);
+
+% =======================================================
+%  SECTION 5 : LoRA branch
+% =======================================================
+\node[rbox, fill=col4, minimum width=13cm, minimum height=3.8cm]
+  (sec5) at (0, -22.5) {};
+
+\node[badge=col4b, minimum width=12cm] (lbl5) at (0, -21.1)
+  {Layer 3 \;|\; UniMOF1barModel (LoRA 微调)
+   \;|\; 171K 可训参数\;/\;27.4M 总参数};
+
+\node[inode=col4b, minimum width=4.5cm]
+  (lora_a) at (-3.0, -23.0)
+  {LoRA 注入 (rank=4, $\alpha$=32)\\冻结原始权重 $W$\\$\Delta W = B \cdot A$\;(低秩可训)\\in\_proj + out\_proj $\times 8$ 层};
+
+\node[inode=col4b, minimum width=4.5cm]
+  (lora_b) at ( 3.5, -23.0)
+  {新结构特征分支 (可训)\\StructureMLP: $N_{feat}\to128$\\FusionHead:\\$(512+128)\to256\to1$};
+
+\draw[darr] (lora_a.east) -- (lora_b.west)
+  node[midway, above, font=\scriptsize\color{col4b}] {替换 Attention};
+
+% =======================================================
+%  SECTION 6 : Loss
+% =======================================================
+\node[rbox, fill=col5, minimum width=13cm, minimum height=1.8cm]
+  (sec6) at (0, -25.8) {};
+
+\node[badge=col5b] (lbl6) at (-4.8, -25.3) {损失函数};
+
+\node[inode=col5b, minimum width=10cm]
+  (loss) at (0.3, -25.8)
+  {MOFV2MSELoss $\;=\;$
+   $\mathrm{MSE}(\hat{y},\,y)$
+   $\;+\;0.1\times\mathcal{L}_{\mathrm{mono}}$
+   \quad (吸附单调性物理约束)};
+
+% =======================================================
+%  OUTPUT
+% =======================================================
+\node[rbox, fill=colout, draw=col3b, line width=1.2pt,
+      minimum width=5cm, minimum height=1.2cm]
+  (out) at (0, -27.5)
+  {\textbf{预测输出}\quad 吸附量 (cm$^3$/g \;或\; mol/kg)};
+
+% =======================================================
+%  VERTICAL MAIN ARROWS
+% =======================================================
+\draw[arr] (in_mof.south) -- (in_mof |- sec1.north);
+\draw[arr] (in_gas.south) -- (in_gas |- sec1.north);
+\draw[arr] (in_env.south) -- (in_env |- sec1.north);
+
+\draw[arr] (sec1.south) -- (emb.north);
+\draw[arr] (emb.south)  -- (tf.north);
+\draw[arr] (tf.south)   -- (enc_out.north);
+\draw[arr] (enc_out.south) -- (f_mof |- sec3.north);
+
+\draw[arr] (cat.south)  -- (cat |- sec4.north);
+\draw[arr] (sec4.south) -- (sec5.north);
+\draw[arr] (sec5.south) -- (sec6.north);
+\draw[arr] (loss.south) -- (out.north);
+
+% =======================================================
+%  PARAM SIZE LABELS (right margin)
+% =======================================================
+\node[font=\scriptsize\bfseries\color{col1b}, anchor=west]
+  at (7.0, -8.8) {26.7M};
+\node[font=\scriptsize\bfseries\color{col2b}, anchor=west]
+  at (7.0, -16.2) {27.4M};
+\node[font=\scriptsize\bfseries\color{col4b}, anchor=west]
+  at (7.0, -22.5) {171K trainable};
+
+\end{tikzpicture}
+\end{document}
